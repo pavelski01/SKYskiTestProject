@@ -1,6 +1,6 @@
 package config;
 
-import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.WebDriver;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +18,7 @@ public class Config
         final char D_CASE = 'd', P_CASE = 'p', T_CASE = 't';
         Properties properties = this.getProperties();
         this.stage = properties.getProperty(STAGE_KEY);
-        if (this.stage == null) this.stage = VAIN;
+        if (this.stage == null) this.stage = EMPTY;
         StringTokenizer stringTokenizer = new StringTokenizer(this.getStage(), DELIMITER);
         String token;
         while (stringTokenizer.hasMoreTokens())
@@ -39,38 +39,56 @@ public class Config
         }
     }
 
-    public static Config getConfigSingleton()
+    public static Config getSingletonInstance()
     {
-        if (configSingleton == null) configSingleton = new Config();
-        return configSingleton;
+        if (singletonInstance == null) singletonInstance = new Config();
+        return singletonInstance;
     }
 
     private void initializeStage(String _stagePrefix, Properties _properties)
     {
-        final String[] realFake = { "Real", "Fake" };
-        String temporaryKey, temporaryValue;
-        for (int counter = 0; counter < realFake.length; counter++)
-            for (String record : this.data)
-            {
-                temporaryKey = _stagePrefix + realFake[counter] + record;
-                temporaryValue = _properties.getProperty(temporaryKey);
-                if (temporaryValue == null) temporaryValue = VAIN;
-                try { this.getFiled(temporaryKey).set(this, temporaryValue); }
-                catch (IllegalAccessException iaEx)
+        String coreKey1 = _stagePrefix + this.core[0];
+        String coreKey2 = _stagePrefix + this.core[1];
+        String coreValue1 = _properties.getProperty(coreKey1);
+        String coreValue2 = _properties.getProperty(coreKey2);
+        if
+        (
+            coreValue1 != null && !coreValue1.equals(EMPTY) &&
+                coreValue2 != null && !coreValue2.equals(EMPTY)
+        )
+        {
+            this.setUpReflectionData(coreKey1, coreValue1);
+            this.setUpReflectionData(coreKey2, coreValue2);
+            final String[] realFake = { "Real", "Fake" };
+            String temporaryKey, temporaryValue;
+            for (int counter = 0; counter < realFake.length; counter++)
+                for (String record : this.data)
                 {
-                    final String ILLEGAL = "Illegal access:";
-                    System.out.println(ILLEGAL + GAP + iaEx.toString());
+                    temporaryKey = _stagePrefix + realFake[counter] + record;
+                    temporaryValue = _properties.getProperty(temporaryKey);
+                    if (temporaryValue == null) temporaryValue = EMPTY;
+                    this.setUpReflectionData(temporaryKey, temporaryValue);
                 }
-            }
+        }
+    }
+
+    private void setUpReflectionData(String temporaryKey, String temporaryValue)
+    {
+        try { this.getFiled(temporaryKey).set(this, temporaryValue); }
+        catch (IllegalAccessException iaEX)
+        {
+            final String ILLEGAL = "Illegal access:";
+            System.out.println(ILLEGAL + GAP + iaEX.toString());
+        }
     }
 
     private Field getFiled(String _name)
     {
         try { return this.getClass().getDeclaredField(_name); }
-        catch (NoSuchFieldException nsfEx)
+        catch (NoSuchFieldException nsfEX)
         {
             final String NO_FIELD = "Field not exist:";
-            System.out.print(NO_FIELD + GAP + nsfEx.toString());
+            System.out.print(NO_FIELD + GAP + nsfEX.toString());
             return null;
         }
     }
@@ -110,9 +128,9 @@ public class Config
     }
 
     public boolean isDebug() { return this.debug; }
-    public Webdriver getFirefoxWebdriver() { return this.firefoxWebdriver; }
-    public Webdriver getChromeWebdriver() { return this.chromeWebdriver; }
-    public Webdriver getOperaWebdriver() { return this.operaWebdriver; }
+    //public Webdriver getFirefoxWebdriver() { return this.firefoxWebdriver; }
+    //public Webdriver getChromeWebdriver() { return this.chromeWebdriver; }
+    //public Webdriver getOperaWebdriver() { return this.operaWebdriver; }
     public int getTimeout() { return this.timeout; }
     public String getStage() { return this.stage; }
     public String getDevBaseURL() { return this.devBaseURL; }
@@ -177,8 +195,9 @@ public class Config
     public String getProdFakePhone() { return this.prodFakePhone; }
 
     private boolean debug;
-    private Webdriver chromeWebdriver, firefoxWebdriver, operaWebdriver;
-    private int timeout = 20;
+    //private Webdriver chromeWebdriver, firefoxWebdriver, operaWebdriver;
+    private int timeout;
+    private final String[] core = { "URL", "Port" };
     private final String[] data =
     {
         "Login", "Password", "Email", "Forename", "Surname",
@@ -206,6 +225,6 @@ public class Config
     private String
         prodFakeLogin, prodFakePassword, prodFakeEmail, prodFakeForename, prodFakeSurname,
         prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
-    private static Config configSingleton;
-    private final String GAP = " ", VAIN = "";
+    private static Config singletonInstance;
+    private final String GAP = " ", EMPTY = "";
 }
