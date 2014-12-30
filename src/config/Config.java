@@ -69,29 +69,29 @@ public class Config
         while (browserStringTokenizer.hasMoreTokens())
         {
             token = browserStringTokenizer.nextToken().toLowerCase();
-            switch (_browser.charAt(0)) {
+            switch (token.charAt(0)) {
                 case C_CASE:
-                    this.chromeWebdriver = this.getChromeWebdriverInstance();
+                    this.chromeWebDriver = this.getChromeWebDriverInstance();
                     break;
                 case F_CASE:
-                    this.firefoxWebdriver = this.getFirefoxWebdriverInstance();
+                    this.firefoxWebDriver = this.getFirefoxWebDriverInstance();
                 case O_CASE:
-                    this.operaWebdriver = this.getOperaWebdriverInstance();
+                    this.operaWebDriver = this.getOperaWebDriverInstance();
             }
         }
     }
 
-    private WebDriver getChromeWebdriverInstance()
+    private WebDriver getChromeWebDriverInstance()
     {
         return null;
     }
 
-    private WebDriver getFirefoxWebdriverInstance()
+    private WebDriver getFirefoxWebDriverInstance()
     {
         return null;
     }
 
-    private WebDriver getOperaWebdriverInstance()
+    private WebDriver getOperaWebDriverInstance()
     {
         return null;
     }
@@ -179,9 +179,9 @@ public class Config
     }
 
     public boolean isDebug() { return this.debug; }
-    public Webdriver getFirefoxWebdriver() { return this.firefoxWebdriver; }
-    public Webdriver getChromeWebdriver() { return this.chromeWebdriver; }
-    public Webdriver getOperaWebdriver() { return this.operaWebdriver; }
+    public WebDriver getFirefoxWebDriver() { return this.firefoxWebDriver; }
+    public WebDriver getChromeWebDriver() { return this.chromeWebDriver; }
+    public WebDriver getOperaWebDriver() { return this.operaWebDriver; }
     public int getTimeout() { return this.timeout; }
     public String getStage() { return this.stage; }
     public String getDevBaseURL() { return this.devBaseURL; }
@@ -246,7 +246,7 @@ public class Config
     public String getProdFakePhone() { return this.prodFakePhone; }
 
     private boolean debug;
-    private Webdriver chromeWebdriver, firefoxWebdriver, operaWebdriver;
+    private WebDriver chromeWebDriver, firefoxWebDriver, operaWebDriver;
     private int timeout;
     private final String[] core = { "URL", "Port" };
     private final String[] data =
