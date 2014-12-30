@@ -14,33 +14,33 @@ import java.lang.reflect.Field;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-public class Config
+public class Configuration
 {
-    public Config()
+    public Configuration()
     {
         final String
             BROWSER_KEY = "browser", DEBUG_KEY = "debug",
             STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
         Properties properties = this.getProperties();
         this.browser = properties.getProperty(BROWSER_KEY);
-        if (this.browser == null) this.browser = EMPTY;
+        if (this.browser == null) this.browser = this.EMPTY;
         else this.analyzeBrowser(this.browser);
         this.debug = Boolean.parseBoolean(properties.getProperty(DEBUG_KEY));
         this.timeout = Integer.parseInt(properties.getProperty(TIMEOUT_KEY));
         this.stage = properties.getProperty(STAGE_KEY);
-        if (this.stage == null) this.stage = EMPTY;
+        if (this.stage == null) this.stage = this.EMPTY;
         else this.analyzeStage(this.stage, properties);
     }
 
-    public static Config getSingletonInstance()
+    public static Configuration getSingletonInstance()
     {
-        if (singletonInstance == null) singletonInstance = new Config();
+        if (singletonInstance == null) singletonInstance = new Configuration();
         return singletonInstance;
     }
 
     private void analyzeStage(String _stage, Properties _properties)
     {
-        if (_stage.equals(EMPTY)) return;
+        if (_stage.equals(this.EMPTY)) return;
         final String DELIMITER = "|";
         final char D_CASE = 'd', P_CASE = 'p', T_CASE = 't';
         final String DEV_STAGE = "dev", PROD_STAGE = "prod", TEST_STAGE = "test";
@@ -66,7 +66,7 @@ public class Config
 
     private void analyzeBrowser(String _browser)
     {
-        if (_browser.equals(EMPTY)) return;
+        if (_browser.equals(this.EMPTY)) return;
         final String DELIMITER = "|";
         final char C_CASE = 'c', F_CASE = 'f', O_CASE = 'o';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
@@ -120,8 +120,8 @@ public class Config
         String coreValue2 = _properties.getProperty(coreKey2);
         if
         (
-            coreValue1 != null && !coreValue1.equals(EMPTY) &&
-                coreValue2 != null && !coreValue2.equals(EMPTY)
+            coreValue1 != null && !coreValue1.equals(this.EMPTY) &&
+                coreValue2 != null && !coreValue2.equals(this.EMPTY)
         )
         {
             this.setUpReflectionData(coreKey1, coreValue1);
@@ -133,7 +133,7 @@ public class Config
                 {
                     temporaryKey = _stagePrefix + state + record;
                     temporaryValue = _properties.getProperty(temporaryKey);
-                    if (temporaryValue == null) temporaryValue = EMPTY;
+                    if (temporaryValue == null) temporaryValue = this.EMPTY;
                     this.setUpReflectionData(temporaryKey, temporaryValue);
                 }
         }
@@ -145,7 +145,7 @@ public class Config
         catch (IllegalAccessException iaEX)
         {
             final String ILLEGAL = "Illegal access:";
-            System.out.println(ILLEGAL + GAP + iaEX.toString());
+            System.out.println(ILLEGAL + this.GAP + iaEX.toString());
         }
     }
 
@@ -155,7 +155,7 @@ public class Config
         catch (NoSuchFieldException nsfEX)
         {
             final String NO_FIELD = "Field not exist:";
-            System.out.print(NO_FIELD + GAP + nsfEX.toString());
+            System.out.print(NO_FIELD + this.GAP + nsfEX.toString());
             return null;
         }
     }
@@ -163,7 +163,7 @@ public class Config
     private Properties getProperties()
     {
         final String
-            PROPERTIES_NAME = "config.properties",
+            PROPERTIES_NAME = "configuration.properties",
             PROPERTIES_PATH = "src/config/";
         Properties properties = new Properties();
         InputStream inputStream = null;
@@ -178,8 +178,8 @@ public class Config
                 PROPERTIES_ERROR_MSG1 = "Problem with load",
                 PROPERTIES_ERROR_MSG2 = "configuration file:";
             System.out.println(
-                PROPERTIES_ERROR_MSG1 + GAP + PROPERTIES_NAME + GAP +
-                    PROPERTIES_ERROR_MSG2 + GAP + ioEX.toString()
+                PROPERTIES_ERROR_MSG1 + this.GAP + PROPERTIES_NAME + this.GAP +
+                    PROPERTIES_ERROR_MSG2 + this.GAP + ioEX.toString()
             );
             if (inputStream != null)
             {
@@ -187,7 +187,7 @@ public class Config
                 catch (IOException io2EX)
                 {
                     final String STREAM_ERROR_MSG = "Problem with close input stream:";
-                    System.out.println(STREAM_ERROR_MSG + GAP + io2EX.toString());
+                    System.out.println(STREAM_ERROR_MSG + this.GAP + io2EX.toString());
                 }
             }
         }
@@ -293,5 +293,5 @@ public class Config
         prodFakeLogin, prodFakePassword, prodFakeEmail, prodFakeForename, prodFakeSurname,
         prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
     private final String GAP = " ", EMPTY = "";
-    private static Config singletonInstance;
+    private static Configuration singletonInstance;
 }
