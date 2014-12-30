@@ -19,12 +19,12 @@ public class Config
         Properties properties = this.getProperties();
         this.browser = properties.getProperty(BROWSER_KEY);
         if (this.browser == null) this.browser = EMPTY;
-        else analyzeBrowser(this.browser);
+        else this.analyzeBrowser(this.browser);
         this.debug = Boolean.parseBoolean(properties.getProperty(DEBUG_KEY));
         this.timeout = Integer.parseInt(properties.getProperty(TIMEOUT_KEY));
         this.stage = properties.getProperty(STAGE_KEY);
         if (this.stage == null) this.stage = EMPTY;
-        else analyzeStage(this.stage, properties);
+        else this.analyzeStage(this.stage, properties);
     }
 
     public static Config getSingletonInstance()
