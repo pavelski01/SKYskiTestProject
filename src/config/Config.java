@@ -1,6 +1,9 @@
 package config;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,21 +72,28 @@ public class Config
         while (browserStringTokenizer.hasMoreTokens())
         {
             token = browserStringTokenizer.nextToken().toLowerCase();
-            switch (token.charAt(0)) {
+            switch (token.charAt(0))
+            {
                 case C_CASE:
                     this.chromeWebDriver = this.getChromeWebDriverInstance();
                     break;
                 case F_CASE:
                     this.firefoxWebDriver = this.getFirefoxWebDriverInstance();
+                    break;
                 case O_CASE:
                     this.operaWebDriver = this.getOperaWebDriverInstance();
+                    break;
             }
         }
     }
 
     private WebDriver getChromeWebDriverInstance()
     {
-        return null;
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--start-maximized");
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
+        desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+        return new ChromeDriver(desiredCapabilities);
     }
 
     private WebDriver getFirefoxWebDriverInstance()
@@ -112,10 +122,10 @@ public class Config
             this.setUpReflectionData(coreKey2, coreValue2);
             final String[] realFake = { "Real", "Fake" };
             String temporaryKey, temporaryValue;
-            for (int counter = 0; counter < realFake.length; counter++)
+            for (String state : realFake)
                 for (String record : this.data)
                 {
-                    temporaryKey = _stagePrefix + realFake[counter] + record;
+                    temporaryKey = _stagePrefix + state + record;
                     temporaryValue = _properties.getProperty(temporaryKey);
                     if (temporaryValue == null) temporaryValue = EMPTY;
                     this.setUpReflectionData(temporaryKey, temporaryValue);
@@ -276,6 +286,6 @@ public class Config
     private String
         prodFakeLogin, prodFakePassword, prodFakeEmail, prodFakeForename, prodFakeSurname,
         prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
-    private static Config singletonInstance;
     private final String GAP = " ", EMPTY = "";
+    private static Config singletonInstance;
 }
