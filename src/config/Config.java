@@ -18,7 +18,6 @@ public class Config
         final String
             BROWSER_KEY = "browser", DEBUG_KEY = "debug",
             STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
-
         Properties properties = this.getProperties();
         this.browser = properties.getProperty(BROWSER_KEY);
         if (this.browser == null) this.browser = EMPTY;
