@@ -1,6 +1,6 @@
 package config;
 
-//import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriver;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,37 +12,88 @@ public class Config
 {
     public Config()
     {
-        final String DELIMITER = "|";
-        final String STAGE_KEY = "stage";
-        final String DEV_STAGE = "dev", PROD_STAGE = "prod", TEST_STAGE = "test";
-        final char D_CASE = 'd', P_CASE = 'p', T_CASE = 't';
+        final String
+            BROWSER_KEY = "browser", DEBUG_KEY = "debug",
+            STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
+
         Properties properties = this.getProperties();
+        this.browser = properties.getProperty(BROWSER_KEY);
+        if (this.browser == null) this.browser = EMPTY;
+        else analyzeBrowser(this.browser);
+        this.debug = Boolean.parseBoolean(properties.getProperty(DEBUG_KEY));
+        this.timeout = Integer.parseInt(properties.getProperty(TIMEOUT_KEY));
         this.stage = properties.getProperty(STAGE_KEY);
         if (this.stage == null) this.stage = EMPTY;
-        StringTokenizer stringTokenizer = new StringTokenizer(this.getStage(), DELIMITER);
-        String token;
-        while (stringTokenizer.hasMoreTokens())
-        {
-            token = stringTokenizer.nextToken().toLowerCase();
-            switch (token.charAt(0))
-            {
-                case D_CASE:
-                    this.initializeStage(DEV_STAGE, properties);
-                    break;
-                case P_CASE:
-                    this.initializeStage(PROD_STAGE, properties);
-                    break;
-                case T_CASE:
-                    this.initializeStage(TEST_STAGE, properties);
-                    break;
-            }
-        }
+        else analyzeStage(this.stage, properties);
     }
 
     public static Config getSingletonInstance()
     {
         if (singletonInstance == null) singletonInstance = new Config();
         return singletonInstance;
+    }
+
+    private void analyzeStage(String _stage, Properties _properties)
+    {
+        if (_stage.equals(EMPTY)) return;
+        final String DELIMITER = "|";
+        final char D_CASE = 'd', P_CASE = 'p', T_CASE = 't';
+        final String DEV_STAGE = "dev", PROD_STAGE = "prod", TEST_STAGE = "test";
+        StringTokenizer stageStringTokenizer = new StringTokenizer(_stage, DELIMITER);
+        String token;
+        while (stageStringTokenizer.hasMoreTokens())
+        {
+            token = stageStringTokenizer.nextToken().toLowerCase();
+            switch (token.charAt(0))
+            {
+                case D_CASE:
+                    this.initializeStage(DEV_STAGE, _properties);
+                    break;
+                case P_CASE:
+                    this.initializeStage(PROD_STAGE, _properties);
+                    break;
+                case T_CASE:
+                    this.initializeStage(TEST_STAGE, _properties);
+                    break;
+            }
+        }
+    }
+
+    private void analyzeBrowser(String _browser)
+    {
+        if (_browser.equals(EMPTY)) return;
+        final String DELIMITER = "|";
+        final char C_CASE = 'c', F_CASE = 'f', O_CASE = 'o';
+        StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
+        String token;
+        while (browserStringTokenizer.hasMoreTokens())
+        {
+            token = browserStringTokenizer.nextToken().toLowerCase();
+            switch (_browser.charAt(0)) {
+                case C_CASE:
+                    this.chromeWebdriver = this.getChromeWebdriverInstance();
+                    break;
+                case F_CASE:
+                    this.firefoxWebdriver = this.getFirefoxWebdriverInstance();
+                case O_CASE:
+                    this.operaWebdriver = this.getOperaWebdriverInstance();
+            }
+        }
+    }
+
+    private WebDriver getChromeWebdriverInstance()
+    {
+        return null;
+    }
+
+    private WebDriver getFirefoxWebdriverInstance()
+    {
+        return null;
+    }
+
+    private WebDriver getOperaWebdriverInstance()
+    {
+        return null;
     }
 
     private void initializeStage(String _stagePrefix, Properties _properties)
@@ -128,9 +179,9 @@ public class Config
     }
 
     public boolean isDebug() { return this.debug; }
-    //public Webdriver getFirefoxWebdriver() { return this.firefoxWebdriver; }
-    //public Webdriver getChromeWebdriver() { return this.chromeWebdriver; }
-    //public Webdriver getOperaWebdriver() { return this.operaWebdriver; }
+    public Webdriver getFirefoxWebdriver() { return this.firefoxWebdriver; }
+    public Webdriver getChromeWebdriver() { return this.chromeWebdriver; }
+    public Webdriver getOperaWebdriver() { return this.operaWebdriver; }
     public int getTimeout() { return this.timeout; }
     public String getStage() { return this.stage; }
     public String getDevBaseURL() { return this.devBaseURL; }
@@ -195,7 +246,7 @@ public class Config
     public String getProdFakePhone() { return this.prodFakePhone; }
 
     private boolean debug;
-    //private Webdriver chromeWebdriver, firefoxWebdriver, operaWebdriver;
+    private Webdriver chromeWebdriver, firefoxWebdriver, operaWebdriver;
     private int timeout;
     private final String[] core = { "URL", "Port" };
     private final String[] data =
@@ -203,7 +254,7 @@ public class Config
         "Login", "Password", "Email", "Forename", "Surname",
         "StreetAddress", "PostalCity", "PostalCode", "Phone"
     };
-    private String stage;
+    private String browser, stage;
     private String devBaseURL, devBasePort;
     private String
         devRealLogin, devRealPassword, devRealEmail, devRealForename, devRealSurname,
