@@ -1,8 +1,11 @@
 package config;
 
+import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -89,7 +92,7 @@ public class Config
     private WebDriver getChromeWebDriverInstance()
     {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--start-maximized");
+        chromeOptions.addArguments("start-maximized");
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
         desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         return new ChromeDriver(desiredCapabilities);
@@ -97,12 +100,16 @@ public class Config
 
     private WebDriver getFirefoxWebDriverInstance()
     {
-        return null;
+        FirefoxProfile firefoxProfile = new FirefoxProfile();
+        firefoxProfile.setPreference("browser.private.browsing.autostart", true);
+        return new FirefoxDriver(firefoxProfile);
     }
 
     private WebDriver getOperaWebDriverInstance()
     {
-        return null;
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.opera();
+        desiredCapabilities.setCapability("opera.arguments", "fullscreen");
+        return new OperaDriver(desiredCapabilities);
     }
 
     private void initializeStage(String _stagePrefix, Properties _properties)
