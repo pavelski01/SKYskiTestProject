@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 
 public class Configuration
 {
+    /* CONSTRUCTOR */
     public Configuration()
     {
         final String
@@ -23,12 +24,12 @@ public class Configuration
             STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
         Properties properties = this.getProperties();
         this.browser = properties.getProperty(BROWSER_KEY);
-        if (this.browser == null) this.browser = this.EMPTY;
+        if (this.browser == null) this.browser = EMPTY;
         else this.analyzeBrowser(this.browser);
         this.debug = Boolean.parseBoolean(properties.getProperty(DEBUG_KEY));
         this.timeout = Integer.parseInt(properties.getProperty(TIMEOUT_KEY));
         this.stage = properties.getProperty(STAGE_KEY);
-        if (this.stage == null) this.stage = this.EMPTY;
+        if (this.stage == null) this.stage = EMPTY;
         else this.analyzeStage(this.stage, properties);
     }
 
@@ -40,7 +41,7 @@ public class Configuration
 
     private void analyzeStage(String _stage, Properties _properties)
     {
-        if (_stage.equals(this.EMPTY)) return;
+        if (_stage.equals(EMPTY)) return;
         final String DELIMITER = "|";
         final char D_CASE = 'd', P_CASE = 'p', T_CASE = 't';
         final String DEV_STAGE = "dev", PROD_STAGE = "prod", TEST_STAGE = "test";
@@ -66,7 +67,7 @@ public class Configuration
 
     private void analyzeBrowser(String _browser)
     {
-        if (_browser.equals(this.EMPTY)) return;
+        if (_browser.equals(EMPTY)) return;
         final String DELIMITER = "|";
         final char C_CASE = 'c', F_CASE = 'f', O_CASE = 'o';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
@@ -120,8 +121,8 @@ public class Configuration
         String coreValue2 = _properties.getProperty(coreKey2);
         if
         (
-            coreValue1 != null && !coreValue1.equals(this.EMPTY) &&
-                coreValue2 != null && !coreValue2.equals(this.EMPTY)
+            coreValue1 != null && !coreValue1.equals(EMPTY) &&
+                coreValue2 != null && !coreValue2.equals(EMPTY)
         )
         {
             this.setUpReflectionData(coreKey1, coreValue1);
@@ -133,7 +134,7 @@ public class Configuration
                 {
                     temporaryKey = _stagePrefix + state + record;
                     temporaryValue = _properties.getProperty(temporaryKey);
-                    if (temporaryValue == null) temporaryValue = this.EMPTY;
+                    if (temporaryValue == null) temporaryValue = EMPTY;
                     this.setUpReflectionData(temporaryKey, temporaryValue);
                 }
         }
@@ -145,7 +146,7 @@ public class Configuration
         catch (IllegalAccessException iaEX)
         {
             final String ILLEGAL = "Illegal access:";
-            System.out.println(ILLEGAL + this.GAP + iaEX.toString());
+            System.out.println(ILLEGAL + GAP + iaEX.toString());
         }
     }
 
@@ -155,7 +156,7 @@ public class Configuration
         catch (NoSuchFieldException nsfEX)
         {
             final String NO_FIELD = "Field not exist:";
-            System.out.print(NO_FIELD + this.GAP + nsfEX.toString());
+            System.out.print(NO_FIELD + GAP + nsfEX.toString());
             return null;
         }
     }
@@ -178,8 +179,8 @@ public class Configuration
                 PROPERTIES_ERROR_MSG1 = "Problem with load",
                 PROPERTIES_ERROR_MSG2 = "configuration file:";
             System.out.println(
-                PROPERTIES_ERROR_MSG1 + this.GAP + PROPERTIES_NAME + this.GAP +
-                    PROPERTIES_ERROR_MSG2 + this.GAP + ioEX.toString()
+                PROPERTIES_ERROR_MSG1 + GAP + PROPERTIES_NAME + GAP +
+                    PROPERTIES_ERROR_MSG2 + GAP + ioEX.toString()
             );
             if (inputStream != null)
             {
@@ -187,13 +188,14 @@ public class Configuration
                 catch (IOException io2EX)
                 {
                     final String STREAM_ERROR_MSG = "Problem with close input stream:";
-                    System.out.println(STREAM_ERROR_MSG + this.GAP + io2EX.toString());
+                    System.out.println(STREAM_ERROR_MSG + GAP + io2EX.toString());
                 }
             }
         }
         return properties;
     }
 
+    /* GETTERS */
     public boolean isDebug() { return this.debug; }
     public WebDriver getFirefoxWebDriver() { return this.firefoxWebDriver; }
     public WebDriver getChromeWebDriver() { return this.chromeWebDriver; }
@@ -261,6 +263,7 @@ public class Configuration
     public String getProdFakePostalCode() { return this.prodFakePostalCode; }
     public String getProdFakePhone() { return this.prodFakePhone; }
 
+    /* VARIABLES */
     private boolean debug;
     private WebDriver chromeWebDriver, firefoxWebDriver, operaWebDriver;
     private int timeout;
@@ -292,6 +295,6 @@ public class Configuration
     private String
         prodFakeLogin, prodFakePassword, prodFakeEmail, prodFakeForename, prodFakeSurname,
         prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
-    private final String GAP = " ", EMPTY = "";
+    private static final String GAP = " ", EMPTY = "";
     private static Configuration singletonInstance;
 }
