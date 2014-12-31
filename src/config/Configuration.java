@@ -295,6 +295,7 @@ public class Configuration
     private String
         prodFakeLogin, prodFakePassword, prodFakeEmail, prodFakeForename, prodFakeSurname,
         prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
-    private static final String GAP = " ", EMPTY = "";
+    private static final String 
+        EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
     private static Configuration singletonInstance;
 }
