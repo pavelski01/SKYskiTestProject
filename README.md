@@ -1,4 +1,4 @@
-SKYskiTestProject
-===================
+SkyskiTestProject
+=================
 
-Description: Integration tests for the SKYski application
+Description: Integration tests for the Skyski application
