@@ -1,4 +1,4 @@
-package config;
+package module.config;
 
 import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
