@@ -19,7 +19,7 @@ public class BasicTestAction extends BasicTestConfig
 	public void toSystemOut(String _text)
 	{ 
 		if (super.config.isDebug()) 
-			System.out.println("[DEBUG] " + _text); 
+			System.out.println("[DEBUG]" + _text); 
 	}
 	
 	public void setupTimeout(int _seconds)

@@ -9,6 +9,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -103,7 +104,8 @@ public class Configuration
                     break;
             }
         }
-        Configuration.webDrivers = (WebDriver[])webDriverList.toArray();
+        WebDriver[] webDriverArray = new WebDriver[webDriverList.size()];
+        Configuration.webDrivers = webDriverList.toArray(webDriverArray);
     }
 
     private WebDriver getChromeWebDriverInstance()
@@ -180,13 +182,20 @@ public class Configuration
     private Properties getProperties()
     {
         final String
+        	FILE_SEPARATOR = File.separator,
             PROPERTIES_NAME = "configuration.properties",
-            PROPERTIES_PATH = "src/config/";
+            PROPERTIES_PATH = 
+            	Configuration.class.getProtectionDomain().
+        		getCodeSource().getLocation().getPath() + FILE_SEPARATOR 
+        		+ "module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + "config";
         Properties properties = new Properties();
         InputStream inputStream = null;
         try
         {
-            inputStream = new FileInputStream(PROPERTIES_PATH + PROPERTIES_NAME);
+            inputStream = 
+        		new FileInputStream(
+    				PROPERTIES_PATH + FILE_SEPARATOR + PROPERTIES_NAME
+				);
             properties.load(inputStream);
         }
         catch (IOException ioEX)

@@ -31,25 +31,38 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-firefox-driver</artifactId>
 			<version>2.46.0</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-chrome-driver</artifactId>
 			<version>2.46.0</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.opera</groupId>
 			<artifactId>operadriver</artifactId>
 			<version>1.5</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+	  		<id>defaultProfile</id>
+	  		<build>
+	    		<finalName>name</finalName>
+	    		<resources>
+	      			<resource>
+	        			<directory>${basedir}/src/main/java/module/skyski_selenium/config</directory>
+	        			<filtering>false</filtering>
+	        			<includes>
+	          				<include>**/*.properties</include>
+	        			</includes>
+	      			</resource>
+	    		</resources>
+	  		</build>
+		</profile>
+	</profiles>
 </project>
