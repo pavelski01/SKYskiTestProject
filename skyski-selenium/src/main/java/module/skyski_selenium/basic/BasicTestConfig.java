@@ -1,4 +1,4 @@
-package module.skyski_selenium.util;
+package module.skyski_selenium.basic;
 
 import org.openqa.selenium.WebDriver;
 import module.skyski_selenium.config.Configuration;
