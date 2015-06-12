@@ -1,4 +1,4 @@
-package module.config;
+package module.skyskiSelenium.config;
 
 import com.opera.core.systems.OperaDriver;
 import org.openqa.selenium.WebDriver;
