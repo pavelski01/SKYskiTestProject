@@ -108,7 +108,7 @@ public class Configuration
 
     private WebDriver getOperaWebDriverInstance()
     {
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.opera();
+        DesiredCapabilities desiredCapabilities = DesiredCapabilities.operaBlink();
         desiredCapabilities.setCapability("opera.arguments", "fullscreen");
         return new OperaDriver(desiredCapabilities);
     }
