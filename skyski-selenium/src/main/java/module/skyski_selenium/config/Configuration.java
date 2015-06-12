@@ -1,16 +1,19 @@
-package module.skyskiSelenium.config;
+package module.skyski_selenium.config;
 
 import com.opera.core.systems.OperaDriver;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.DesiredCapabilities;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
@@ -44,6 +47,8 @@ public class Configuration
         if (_status) return Configuration.SUCCESS;
         else return Configuration.FAILURE;
     }
+    
+    public static WebDriver[] getDrivers() { return Configuration.webDrivers; }
 
     private void analyzeStage(String _stage, Properties _properties)
     {
@@ -78,6 +83,7 @@ public class Configuration
         final char C_CASE = 'c', F_CASE = 'f', O_CASE = 'o';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
         String token;
+        ArrayList<WebDriver> webDriverList = new ArrayList<WebDriver>();
         while (browserStringTokenizer.hasMoreTokens())
         {
             token = browserStringTokenizer.nextToken().toLowerCase();
@@ -85,15 +91,19 @@ public class Configuration
             {
                 case C_CASE:
                     this.chromeWebDriver = this.getChromeWebDriverInstance();
+                    webDriverList.add(this.chromeWebDriver);
                     break;
                 case F_CASE:
                     this.firefoxWebDriver = this.getFirefoxWebDriverInstance();
+                    webDriverList.add(this.firefoxWebDriver);
                     break;
                 case O_CASE:
                     this.operaWebDriver = this.getOperaWebDriverInstance();
+                    webDriverList.add(this.operaWebDriver);
                     break;
             }
         }
+        Configuration.webDrivers = (WebDriver[])webDriverList.toArray();
     }
 
     private WebDriver getChromeWebDriverInstance()
@@ -146,9 +156,9 @@ public class Configuration
         }
     }
 
-    private void setUpReflectionData(String temporaryKey, String temporaryValue)
+    private void setUpReflectionData(String _temporaryKey, String _temporaryValue)
     {
-        try { this.getFiled(temporaryKey).set(this, temporaryValue); }
+        try { this.getFiled(_temporaryKey).set(this, _temporaryValue); }
         catch (IllegalAccessException iaEX)
         {
             final String ILLEGAL = "Illegal access:";
@@ -304,4 +314,5 @@ public class Configuration
     private static final String 
         EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
     private static Configuration singletonInstance;
+    private static WebDriver[] webDrivers;
 }
