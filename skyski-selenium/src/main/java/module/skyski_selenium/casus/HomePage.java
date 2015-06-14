@@ -7,11 +7,8 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class WelcomePage extends BasicTestCase
+public class HomePage extends BasicTestCase
 {
 	@Test
-    public void goToWelcomPage_ValidUrl_Success()
-	{
-		super.getWebDriver().get("http://localhost:8080/skyski");
-	}
+    public void goToHomePage_ValidUrl_Success() {}
 }

@@ -7,9 +7,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -119,9 +119,17 @@ public class Configuration
 
     private WebDriver getFirefoxWebDriverInstance()
     {
-        FirefoxProfile firefoxProfile = new FirefoxProfile();
+    	ProfilesIni profileIni = new ProfilesIni();
+        FirefoxProfile firefoxProfile = profileIni.getProfile("qa");
         firefoxProfile.setPreference("browser.private.browsing.autostart", true);
-        return new FirefoxDriver(firefoxProfile);
+        firefoxProfile.setPreference("network.http.phishy-userpass-length", 255);
+        firefoxProfile.setPreference("network.automatic-ntlm-auth.trusted-uris", "localhost");
+        firefoxProfile.setPreference("network.negotiate-auth.trusteduris", "localhost");
+        firefoxProfile.setPreference("signon.autologin.proxy", true);
+        firefoxProfile.setPreference("webdriver.load.strategy", "unstable");        
+        FirefoxDriver firefoxDriver = new FirefoxDriver(firefoxProfile);
+        firefoxDriver.manage().window().maximize();
+        return firefoxDriver;
     }
 
     private WebDriver getOperaWebDriverInstance()
@@ -135,16 +143,24 @@ public class Configuration
     {
         String coreKey1 = _stagePrefix + this.core[0];
         String coreKey2 = _stagePrefix + this.core[1];
+        String coreKey3 = _stagePrefix + this.core[2];
+        String coreKey4 = _stagePrefix + this.core[3];
         String coreValue1 = _properties.getProperty(coreKey1);
         String coreValue2 = _properties.getProperty(coreKey2);
+        String coreValue3 = _properties.getProperty(coreKey3);
+        String coreValue4 = _properties.getProperty(coreKey4);
         if
         (
             coreValue1 != null && !coreValue1.equals(Configuration.EMPTY) &&
-                coreValue2 != null && !coreValue2.equals(Configuration.EMPTY)
+                coreValue2 != null && !coreValue2.equals(Configuration.EMPTY) &&
+                	coreValue3 != null && !coreValue3.equals(Configuration.EMPTY) &&
+                		coreValue4 != null && !coreValue4.equals(Configuration.EMPTY)
         )
         {
             this.setUpReflectionData(coreKey1, coreValue1);
             this.setUpReflectionData(coreKey2, coreValue2);
+            this.setUpReflectionData(coreKey3, coreValue3);
+            this.setUpReflectionData(coreKey4, coreValue4);
             final String[] realFake = { "Real", "Fake" };
             String temporaryKey, temporaryValue;
             for (String state : realFake)
@@ -182,12 +198,12 @@ public class Configuration
     private Properties getProperties()
     {
         final String
-        	FILE_SEPARATOR = File.separator,
+        	FILE_SEPARATOR = System.getProperty("file.separator"),
             PROPERTIES_NAME = "configuration.properties",
             PROPERTIES_PATH = 
             	Configuration.class.getProtectionDomain().
-        		getCodeSource().getLocation().getPath() + FILE_SEPARATOR 
-        		+ "module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + "config";
+        		getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
+        		"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + "config";
         Properties properties = new Properties();
         InputStream inputStream = null;
         try
@@ -228,7 +244,9 @@ public class Configuration
     public int getTimeout() { return this.timeout; }
     public String getStage() { return this.stage; }
     public String getDevBaseURL() { return this.devBaseURL; }
-    public String getDevBasePort() { return this.devBasePort; }
+    public String getDevBasePort() { return this.devBasePort; }    
+    public String getDevBasicCredentialUser() { return this.devBasicCredentialUser; }
+    public String getDevBasicCredentialPassword() { return this.devBasicCredentialPassword; }    
     public String getDevRealLogin() { return this.devRealLogin; }
     public String getDevRealPassword() { return this.devRealPassword; }
     public String getDevRealEmail() { return this.devRealEmail; }
@@ -249,6 +267,8 @@ public class Configuration
     public String getDevFakePhone() { return this.devFakePhone; }
     public String getTestBaseURL() { return this.testBaseURL; }
     public String getTestBasePort() { return this.testBasePort; }
+    public String getTestBasicCredentialUser() { return this.testBasicCredentialUser; }
+    public String getTestBasicCredentialPassword() { return this.testBasicCredentialPassword; }
     public String getTestRealLogin() { return this.testRealLogin; }
     public String getTestRealPassword() { return this.testRealPassword; }
     public String getTestRealEmail() { return this.testRealEmail; }
@@ -269,6 +289,8 @@ public class Configuration
     public String getTestFakePhone() { return this.testFakePhone; }
     public String getProdBaseURL() { return this.prodBaseURL; }
     public String getProdBasePort() { return this.prodBasePort; }
+    public String getProdBasicCredentialUser() { return this.prodBasicCredentialUser; }
+    public String getProdBasicCredentialPassword() { return this.prodBasicCredentialPassword; }
     public String getProdRealLogin() { return this.prodRealLogin; }
     public String getProdRealPassword() { return this.prodRealPassword; }
     public String getProdRealEmail() { return this.prodRealEmail; }
@@ -292,28 +314,29 @@ public class Configuration
     private boolean debug;
     private WebDriver chromeWebDriver, firefoxWebDriver, operaWebDriver;
     private int timeout;
-    private final String[] core = { "URL", "Port" };
+    private final String[] core = 
+	{ "BaseURL", "BasePort", "BasicCredentialUser", "BasicCredentialPassword" };
     private final String[] data =
     {
-        "Login", "Password", "Email", "Forename", "Surname",
+    	"Login", "Password", "Email", "Forename", "Surname",
         "StreetAddress", "PostalCity", "PostalCode", "Phone"
     };
     private String browser, stage;
-    private String devBaseURL, devBasePort;
+    private String devBaseURL, devBasePort, devBasicCredentialUser, devBasicCredentialPassword;
     private String
         devRealLogin, devRealPassword, devRealEmail, devRealForename, devRealSurname,
         devRealStreetAddress, devRealPostalCity, devRealPostalCode, devRealPhone;
     private String
         devFakeLogin, devFakePassword, devFakeEmail, devFakeForename, devFakeSurname,
         devFakeStreetAddress, devFakePostalCity, devFakePostalCode, devFakePhone;
-    private String testBaseURL, testBasePort;
+    private String testBaseURL, testBasePort, testBasicCredentialUser, testBasicCredentialPassword;
     private String
         testRealLogin, testRealPassword, testRealEmail, testRealForename, testRealSurname,
         testRealStreetAddress, testRealPostalCity, testRealPostalCode, testRealPhone;
     private String
         testFakeLogin, testFakePassword, testFakeEmail, testFakeForename, testFakeSurname,
         testFakeStreetAddress, testFakePostalCity, testFakePostalCode, testFakePhone;
-    private String prodBaseURL, prodBasePort;
+    private String prodBaseURL, prodBasePort, prodBasicCredentialUser, prodBasicCredentialPassword;;
     private String
         prodRealLogin, prodRealPassword, prodRealEmail, prodRealForename, prodRealSurname,
         prodRealStreetAddress, prodRealPostalCity, prodRealPostalCode, prodRealPhone;

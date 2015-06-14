@@ -14,11 +14,12 @@ public class BasicTestAction extends BasicTestConfig
 		super();
 		if (super.webDrivers[0] != null) 
 			this.currentWebDriver = super.webDrivers[0];
+		this.currentStage = super.config.getStage().split("|")[0];
 	}
 	
 	public void toSystemOut(String _text)
 	{ 
-		if (super.config.isDebug()) 
+		if (super.config.isDebug())
 			System.out.println("[DEBUG]" + _text); 
 	}
 	
@@ -70,4 +71,5 @@ public class BasicTestAction extends BasicTestConfig
     }
 
     private WebDriver currentWebDriver;
+    private String currentStage;
 }
