@@ -3,7 +3,7 @@ package module.skyski_selenium.basic;
 import org.openqa.selenium.WebDriver;
 import module.skyski_selenium.config.Configuration;
 
-public class BasicTestConfig
+public abstract class BasicTestConfig
 {
 	public BasicTestConfig()
 	{

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-public class Configuration
+public final class Configuration
 {
     /* CONSTRUCTOR */
     public Configuration()

@@ -2,7 +2,11 @@ package module.skyski_selenium.basic;
 
 import java.awt.Robot;
 import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 
 import org.junit.Before;
@@ -40,6 +44,7 @@ public class BasicTestCase extends BasicTestAction
 	{
 		new Thread(new LoginWindow()).start();
 		super.getWebDriver().get("http://localhost:8080/skyski");
+		super.setUpTimeout(super.config.getTimeout());
 	}
 	
 	public class LoginWindow implements Runnable
@@ -55,10 +60,23 @@ public class BasicTestCase extends BasicTestAction
         public void login() throws Exception
         {
         	Thread.sleep(5000);
+        	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();        	
+        	clipboard.setContents(
+    			new Transferable()
+    			{
+    				public DataFlavor[] getTransferDataFlavors() { return new DataFlavor[0]; }
+
+    				public boolean isDataFlavorSupported(DataFlavor _flavor) { return false; }
+
+    				public Object getTransferData(DataFlavor _flavor) throws UnsupportedFlavorException 
+    				{ throw new UnsupportedFlavorException(_flavor); }
+    			}, 
+    			null
+			);        	
             Robot robot = new Robot();
             StringSelection username = 
         		new StringSelection(BasicTestCase.super.config.getDevBasicCredentialUser());
-            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(username, null);            
+            clipboard.setContents(username, null);            
             robot.keyPress(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_V);
             robot.keyRelease(KeyEvent.VK_V);
