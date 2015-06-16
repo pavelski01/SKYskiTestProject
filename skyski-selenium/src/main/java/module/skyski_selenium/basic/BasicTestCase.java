@@ -9,6 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
@@ -39,12 +40,17 @@ public class BasicTestCase extends BasicTestAction
         { BasicTestCase.super.toSystemOut("[WATCHER] " + _description.toString()); }
 	};
 	
+	@AfterClass
+    public static void tearDownAfterClass() { setUpIsDone = false; }
+	
 	@Before
-    public void setUp() throws Exception
+    public void setUpBefore() throws Exception
 	{
+		if (BasicTestCase.setUpIsDone) return;
 		new Thread(new LoginWindow()).start();
 		super.getWebDriver().get("http://localhost:8080/skyski");
 		super.setUpTimeout(super.config.getTimeout());
+		BasicTestCase.setUpIsDone = true;
 	}
 	
 	public class LoginWindow implements Runnable
@@ -96,4 +102,6 @@ public class BasicTestCase extends BasicTestAction
             Thread.sleep(5000);
         }
     }
+	
+	private static boolean setUpIsDone = false;
 }

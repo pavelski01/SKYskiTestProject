@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -30,7 +31,9 @@ public abstract class BasicTestAction extends BasicTestConfig
 	public void toSystemOut(String _text)
 	{ 
 		if (super.config.isDebug())
-			System.out.println("[DEBUG]" + _text);
+			System.out.println(
+				"[DEBUG]" + ((_text.startsWith("[") ? "" : " ") + _text)
+			);
 	}
 	
 	public void setUpTimeout(int _seconds)
@@ -84,11 +87,38 @@ public abstract class BasicTestAction extends BasicTestConfig
     	}
     }
     
+    public WebElement findElementBy(By _by)
+    { return this.getWebDriver().findElement(_by); }
+    
     public WebElement findElementByXpath(String _xpathSelector)
-    { return this.getWebDriver().findElement(By.xpath(_xpathSelector)); }
+    { return this.findElementBy(By.xpath(_xpathSelector)); }
     
     public WebElement findElementByCss(String _cssSelector)
-    { return this.getWebDriver().findElement(By.cssSelector(_cssSelector)); }
+    { return this.findElementBy(By.cssSelector(_cssSelector)); }
+    
+    public boolean retryingFindClickElementBy(By _by)
+    {
+        boolean result = false;
+        int attempt = 0;
+        while (attempt < 3)
+        {
+            try 
+            { 
+            	this.getWebDriver().findElement(_by).click();
+                result = true;
+                break;
+            } 
+            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
+            attempt++;
+        }
+        return result;
+    }
+    
+    public boolean retryingFindClickElementByXpath(String _xpathSelector)
+    { return this.retryingFindClickElementBy(By.xpath(_xpathSelector)); }
+    
+    public boolean retryingFindClickElementByCss(String _cssSelector)
+    { return this.retryingFindClickElementBy(By.cssSelector(_cssSelector)); }
     
     public void domClick(WebElement _element)
     {
@@ -102,22 +132,35 @@ public abstract class BasicTestAction extends BasicTestConfig
         actions.moveToElement(_element).click().build().perform();
     }
     
-    public void adjustScreen()
+    public void htmlChordKeySequence(int _counter, CharSequence ..._charSequences)
     {
-	    WebDriverWait wait = new WebDriverWait(this.getWebDriver(), super.config.getTimeout());
-	    WebElement html = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("html")));
-	    html.sendKeys(Keys.chord(Keys.CONTROL, Keys.SUBTRACT));
-		html.sendKeys(Keys.chord(Keys.CONTROL, Keys.SUBTRACT));
-		html.sendKeys(Keys.chord(Keys.CONTROL, Keys.SUBTRACT));
-		html.sendKeys(Keys.chord(Keys.CONTROL, Keys.SUBTRACT));
-    }
+    	WebElement html = null;
+    	for (int i = 0; i < _counter; i++)
+    	{
+	        int attempt = 0;
+	        while (attempt < 3)
+	        {
+	            try 
+	            { 
+	            	html = 
+	        			new WebDriverWait(this.getWebDriver(), 5).until(
+	            			ExpectedConditions.presenceOfElementLocated(By.tagName("html"))
+	    				);
+	            	html.sendKeys(Keys.chord(_charSequences));
+	                break;
+	            } 
+	            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
+	            catch (WebDriverException wde) { this.toSystemOut("[WEB_DRIVER] " + wde.getMessage()); }
+	            attempt++;
+	        }
+    	}
+	}
+    
+    public void adjustScreen()
+    { this.htmlChordKeySequence(4, Keys.CONTROL, Keys.SUBTRACT); }
     
     public void resetScreen()
-    {
-	    WebDriverWait wait = new WebDriverWait(this.getWebDriver(), super.config.getTimeout());
-	    WebElement html = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("html")));
-	    html.sendKeys(Keys.chord(Keys.CONTROL, "0"));
-    }
+    { this.htmlChordKeySequence(1, Keys.CONTROL, "0"); }
     
     public void titleAssertion(String _title, String _text)
     {
