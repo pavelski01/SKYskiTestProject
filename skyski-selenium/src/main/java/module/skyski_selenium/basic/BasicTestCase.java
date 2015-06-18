@@ -9,6 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
@@ -43,14 +44,22 @@ public class BasicTestCase extends BasicTestAction
 	@AfterClass
     public static void tearDownAfterClass() { setUpIsDone = false; }
 	
+	@After
+	public void tearDown()
+	{ super.retryingFindClickElementByCss("form > a:first-of-type"); }
+	
 	@Before
     public void setUpBefore() throws Exception
-	{
-		if (BasicTestCase.setUpIsDone) return;
-		new Thread(new LoginWindow()).start();
-		super.getWebDriver().get("http://localhost:8080/skyski");
-		super.setUpTimeout(super.config.getTimeout());
-		BasicTestCase.setUpIsDone = true;
+	{		
+		if (!BasicTestCase.setUpIsDone)
+		{
+			new Thread(new LoginWindow()).start();
+			super.getWebDriver().get("http://localhost:8080/skyski");
+			super.setUpTimeout(super.config.getTimeout());
+			BasicTestCase.setUpIsDone = true;
+		}
+		super.getWebDriver().get("http://localhost:8080/skyski");		
+		super.titleAssertion("SKYski Project", "Load home page");
 	}
 	
 	public class LoginWindow implements Runnable

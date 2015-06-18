@@ -1,6 +1,7 @@
 package module.skyski_selenium.basic;
 
 import static org.junit.Assert.fail;
+import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,6 +15,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.google.common.base.Function;
 
 public abstract class BasicTestAction extends BasicTestConfig
 {
@@ -100,7 +103,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     {
         boolean result = false;
         int attempt = 0;
-        while (attempt < 3)
+        while (attempt < 5)
         {
             try 
             { 
@@ -109,10 +112,35 @@ public abstract class BasicTestAction extends BasicTestConfig
                 break;
             } 
             catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
+            catch (WebDriverException wde) { this.toSystemOut("[WEBDRIVER] " + wde.getMessage()); }
             attempt++;
         }
         return result;
     }
+    
+    public String retryingFindTextElementBy(By _by)
+    {
+    	String result = null;
+        int attempt = 0;
+        while (attempt < 5)
+        {
+            try 
+            { 
+            	result = this.getWebDriver().findElement(_by).getText();
+                break;
+            } 
+            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
+            catch (WebDriverException wde) { this.toSystemOut("[WEBDRIVER] " + wde.getMessage()); }
+            attempt++;
+        }
+        return result;
+    }
+    
+    public String retryingFindTextElementByXpath(String _xpathSelector)
+    { return this.retryingFindTextElementBy(By.xpath(_xpathSelector)); }
+    
+    public String retryingFindTextElementByCss(String _cssSelector)
+    { return this.retryingFindTextElementBy(By.cssSelector(_cssSelector)); }
     
     public boolean retryingFindClickElementByXpath(String _xpathSelector)
     { return this.retryingFindClickElementBy(By.xpath(_xpathSelector)); }
@@ -142,15 +170,12 @@ public abstract class BasicTestAction extends BasicTestConfig
 	        {
 	            try 
 	            { 
-	            	html = 
-	        			new WebDriverWait(this.getWebDriver(), 5).until(
-	            			ExpectedConditions.presenceOfElementLocated(By.tagName("html"))
-	    				);
+	            	html = this.waitUntil(ExpectedConditions.presenceOfElementLocated(By.tagName("html")));
 	            	html.sendKeys(Keys.chord(_charSequences));
 	                break;
 	            } 
 	            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
-	            catch (WebDriverException wde) { this.toSystemOut("[WEB_DRIVER] " + wde.getMessage()); }
+	            catch (WebDriverException wde) { this.toSystemOut("[WEBDRIVER] " + wde.getMessage()); }
 	            attempt++;
 	        }
     	}
@@ -166,9 +191,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     {
         try
         {
-        	new WebDriverWait(
-    			this.getWebDriver(), super.config.getTimeout()
-			).until(ExpectedConditions.titleIs(_title));
+        	this.waitUntil(ExpectedConditions.titleIs(_title));
         }
         catch (WebDriverException wde)
         {
@@ -176,6 +199,37 @@ public abstract class BasicTestAction extends BasicTestConfig
             fail("FAILURE " + _text);
         }
     }
+    
+    public <V> V waitUntil(Function<? super WebDriver, V> _isTrue)
+    {
+    	return new WebDriverWait(this.getWebDriver(), super.config.getTimeout()).until(_isTrue);
+    }
+    
+	public void sortAssertion(
+		String _sortButton, String _firstElement, String _secondElement, boolean _isPreSorted
+	)
+	{
+		String firstTextBeforeSort;
+		String lastTextBeforeSort;
+		if (!_isPreSorted)
+		{
+			firstTextBeforeSort = this.retryingFindTextElementByCss(_firstElement);
+			this.retryingFindClickElementByCss(_sortButton);
+			this.waitUntil(ExpectedConditions.invisibilityOfElementWithText(
+				By.cssSelector(_firstElement), firstTextBeforeSort)
+			);
+		}
+		firstTextBeforeSort = this.retryingFindTextElementByCss(_firstElement);
+		lastTextBeforeSort = this.retryingFindTextElementByCss(_secondElement);
+		this.retryingFindClickElementByCss(_sortButton);
+		this.waitUntil(ExpectedConditions.invisibilityOfElementWithText(
+			By.cssSelector(_firstElement), firstTextBeforeSort)
+		);
+		String firstTextAfterSort = this.retryingFindTextElementByCss(_firstElement);
+		String lastTextAfterSort = this.retryingFindTextElementByCss(_secondElement);
+		assertEquals(firstTextBeforeSort, lastTextAfterSort);
+		assertEquals(lastTextBeforeSort, firstTextAfterSort);
+	}
 
     private WebDriver currentWebDriver;
     private String currentStage;

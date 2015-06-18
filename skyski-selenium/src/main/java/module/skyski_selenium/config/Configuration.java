@@ -1,7 +1,5 @@
 package module.skyski_selenium.config;
 
-import com.opera.core.systems.OperaDriver;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -81,7 +79,7 @@ public final class Configuration
     {
         if (_browser.equals(Configuration.EMPTY)) return;
         final String DELIMITER = "|";
-        final char C_CASE = 'c', F_CASE = 'f', O_CASE = 'o';
+        final char C_CASE = 'c', F_CASE = 'f';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
         String token;
         ArrayList<WebDriver> webDriverList = new ArrayList<WebDriver>();
@@ -97,10 +95,6 @@ public final class Configuration
                 case F_CASE:
                     this.firefoxWebDriver = this.getFirefoxWebDriverInstance();
                     webDriverList.add(this.firefoxWebDriver);
-                    break;
-                case O_CASE:
-                    this.operaWebDriver = this.getOperaWebDriverInstance();
-                    webDriverList.add(this.operaWebDriver);
                     break;
             }
         }
@@ -130,13 +124,6 @@ public final class Configuration
         FirefoxDriver firefoxDriver = new FirefoxDriver(firefoxProfile);
         firefoxDriver.manage().window().maximize();
         return firefoxDriver;
-    }
-
-    private WebDriver getOperaWebDriverInstance()
-    {
-        DesiredCapabilities desiredCapabilities = DesiredCapabilities.operaBlink();
-        desiredCapabilities.setCapability("opera.arguments", "fullscreen");
-        return new OperaDriver(desiredCapabilities);
     }
 
     private void initializeStage(String _stagePrefix, Properties _properties)
