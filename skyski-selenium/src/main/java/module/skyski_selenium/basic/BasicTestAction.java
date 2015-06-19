@@ -167,7 +167,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     	for (int i = 0; i < _counter; i++)
     	{
 	        int attempt = 0;
-	        while (attempt < 3)
+	        while (attempt < 5)
 	        {
 	            try 
 	            { 
