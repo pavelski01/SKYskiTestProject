@@ -240,8 +240,8 @@ public abstract class BasicTestAction extends BasicTestConfig
 		lastTextBeforeSort = this.retryingFindTextElementByCss(_secondElement);
 		this.retryingFindClickElementByCss(_sortButton);
 		this.waitUntil(ExpectedConditions.invisibilityOfElementWithText(
-			By.cssSelector(_firstElement), firstTextBeforeSort)
-		);
+			By.cssSelector(_firstElement), firstTextBeforeSort
+		));
 		String firstTextAfterSort = this.retryingFindTextElementByCss(_firstElement);
 		String lastTextAfterSort = this.retryingFindTextElementByCss(_secondElement);
 		assertEquals(firstTextBeforeSort, lastTextAfterSort);
