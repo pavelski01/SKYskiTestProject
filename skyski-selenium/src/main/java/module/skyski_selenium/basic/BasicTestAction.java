@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
@@ -198,6 +199,22 @@ public abstract class BasicTestAction extends BasicTestConfig
         	this.toSystemOut("FAILURE " + _text);
             fail("FAILURE " + _text);
         }
+    }
+    
+    public void titleNotAssertion(String _title, String _text)
+    {
+    	try
+        {
+    		this.waitUntil(ExpectedConditions.titleIs(_title));
+    		this.toSystemOut("FAILURE " + _text);
+    		fail("FAILURE " + _text);
+        }
+    	catch (TimeoutException te) { this.toSystemOut("SUCCESS " + _text); }
+    	catch (WebDriverException wde)
+    	{
+    		this.toSystemOut("FAILURE " + _text);
+    		fail("FAILURE " + _text);
+    	}
     }
     
     public <V> V waitUntil(Function<? super WebDriver, V> _isTrue)
