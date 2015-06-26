@@ -1,4 +1,4 @@
 SkyskiTestProject
 =================
 
-Description: Selenium integration tests for SkyskiProject
+Description: Selenium functional tests for SkyskiProject
