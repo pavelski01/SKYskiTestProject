@@ -161,7 +161,7 @@ public abstract class BasicTestAction extends BasicTestConfig
         actions.moveToElement(_element).click().build().perform();
     }
     
-    public void htmlChordKeySequence(int _counter, CharSequence ..._charSequences)
+    public void htmlChordKeySequence(int _counter, CharSequence... _charSequences)
     {
     	WebElement html = null;
     	for (int i = 0; i < _counter; i++)
@@ -247,6 +247,62 @@ public abstract class BasicTestAction extends BasicTestConfig
 		assertEquals(firstTextBeforeSort, lastTextAfterSort);
 		assertEquals(lastTextBeforeSort, firstTextAfterSort);
 	}
+	
+	public void elementPresentAssertionByCss(String _cssSelector, String _text)
+	{
+		this.elementPresentAssertion(By.cssSelector(_cssSelector), _text);
+	}
+	
+	public void elementAbsentAssertionByCss(String _cssSelector, String _text)
+	{
+		this.elementPresentAssertion(By.cssSelector(_cssSelector), _text);
+	}
+	
+	public void elementPresentAssertion(By _by, String _text)
+	{
+		try
+		{
+			this.waitUntil(ExpectedConditions.presenceOfElementLocated(_by));
+			this.logAssertionSuccess(_text);
+        }
+		catch (TimeoutException te)
+		{
+            logAssertionFailure(_text);
+            fail("FAILURE " + _text);
+        }
+	}
+	
+	public void elementAbsentAssertion(String _text, By _by)
+	{
+		try
+		{
+			this.waitUntil(ExpectedConditions.invisibilityOfElementLocated(_by));
+			this.logAssertionSuccess(_text);
+        }
+		catch (TimeoutException te)
+		{
+            logAssertionFailure(_text);
+            fail("FAILURE " + _text);
+        }
+	}
+	
+	public void logAssertion(String _text, boolean _isSuccess)
+	{
+		String status;
+		if (_isSuccess) status = "success";
+		else status = "failure";
+		this.toSystemOut("assertion " + status + ": " + _text);
+	}
+	
+	public void logAssertionFailure(String _text)
+	{
+		this.logAssertion(_text, false);
+    }
+
+    public void logAssertionSuccess(String _text)
+    {
+    	this.logAssertion(_text, true);
+    }
 
     private WebDriver currentWebDriver;
     private String currentStage;
