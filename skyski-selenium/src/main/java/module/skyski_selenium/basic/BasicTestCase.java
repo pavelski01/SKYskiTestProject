@@ -42,7 +42,7 @@ public class BasicTestCase extends BasicTestAction
 	};
 	
 	@AfterClass
-    public static void tearDownAfterClass() { setUpIsDone = false; }
+    public static void tearDownAfterClass() { BasicTestCase.setUpIsDone = false; }
 	
 	@After
 	public void tearDown()
