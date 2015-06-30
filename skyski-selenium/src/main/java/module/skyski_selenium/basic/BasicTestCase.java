@@ -1,5 +1,6 @@
 package module.skyski_selenium.basic;
 
+import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -20,7 +21,7 @@ public class BasicTestCase extends BasicTestAction
 {
 	@Rule
 	public TestName testName = new TestName()
-	{		
+	{
 		@Override
         protected void starting(Description _description)
 		{ this.watcherToSystemOut("START " + _description); }
@@ -42,7 +43,11 @@ public class BasicTestCase extends BasicTestAction
 	};
 	
 	@AfterClass
-    public static void tearDownAfterClass() { BasicTestCase.setUpIsDone = false; }
+    public static void tearDownAfterClass() 
+	{ 
+		BasicTestCase.setUpIsDone = false;
+		new BasicTestCase().getWebDriver().get("http://localhost:8080/skyski");
+	}
 	
 	@After
 	public void tearDown()
@@ -72,7 +77,7 @@ public class BasicTestCase extends BasicTestAction
         	{ BasicTestCase.super.toSystemOut("[WATCHER] " + ex.getMessage()); }
         }
 
-        public void login() throws Exception
+        public void login() throws AWTException, InterruptedException, UnsupportedFlavorException 
         {
         	Thread.sleep(5000);
         	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();        	
