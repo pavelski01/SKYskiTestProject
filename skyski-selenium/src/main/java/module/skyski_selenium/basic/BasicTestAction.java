@@ -4,6 +4,8 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -100,6 +102,14 @@ public abstract class BasicTestAction extends BasicTestConfig
     public WebElement findElementByCss(String _cssSelector)
     { return this.findElementBy(By.cssSelector(_cssSelector)); }
     
+    public String findRegex(String _source, String _regex)
+    {
+    	Pattern aPattern = Pattern.compile(_regex);
+    	Matcher aMatcher = aPattern.matcher(_source);
+    	if (aMatcher.find()) return aMatcher.group();
+    	else return "No matches";
+    }
+    
     public boolean retryingFindClickElementBy(By _by)
     {
         boolean result = false;
@@ -114,7 +124,7 @@ public abstract class BasicTestAction extends BasicTestConfig
                 break;
             } 
             catch (StaleElementReferenceException sere) 
-            { this.toSystemOut("[TEST][STALE] " + sere.getMessage()); }
+            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.staleRegex)); }
             catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
             attempt++;
         }
@@ -133,7 +143,7 @@ public abstract class BasicTestAction extends BasicTestConfig
             	this.toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
                 break;
             } 
-            catch (StaleElementReferenceException sere) { this.toSystemOut("[TEST][STALE] " + sere.getMessage()); }
+            catch (StaleElementReferenceException sere) { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.staleRegex)); }
             catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
             attempt++;
         }
@@ -178,7 +188,8 @@ public abstract class BasicTestAction extends BasicTestConfig
 	            	html.sendKeys(Keys.chord(_charSequences));
 	                break;
 	            } 
-	            catch (StaleElementReferenceException sere) { this.toSystemOut("[TEST][STALE] " + sere.getMessage()); }
+	            catch (StaleElementReferenceException sere) 
+	            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.staleRegex)); }
 	            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
 	            attempt++;
 	        }
@@ -306,6 +317,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     	this.logAssertion(_text, true);
     }
 
+    private final String staleRegex = "[\\w\\s]+";
     private WebDriver currentWebDriver;
     private String currentStage;
 }
