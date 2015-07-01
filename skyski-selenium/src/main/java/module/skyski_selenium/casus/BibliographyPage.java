@@ -10,16 +10,16 @@ import module.skyski_selenium.basic.BasicTestCase;
 public class BibliographyPage extends BasicTestCase
 {
 	@Test
-    public void goToBibliographyPage_ValidUrl_Success() 
+    public void goToBibliographyPageAndReturn_ValidUrl_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("#bibliography");
+		super.titleNotAssertion("SKYski Project", "Unload home page");
 		super.titleAssertion("SKYski Bibliography", "Load bibliography page");
 		super.retryingFindClickElementByCss("form tfoot > tr > td > a");
+		super.titleNotAssertion("SKYski Bibliography", "Unload bibliography page");
 		super.titleAssertion("SKYski Project", "Load home page");
-		super.resetScreen();
-		super.adjustScreen();
     }
 	
 	@Test

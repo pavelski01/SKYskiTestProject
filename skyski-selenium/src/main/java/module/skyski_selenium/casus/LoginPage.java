@@ -10,13 +10,16 @@ import module.skyski_selenium.basic.BasicTestCase;
 public class LoginPage extends BasicTestCase
 {
 	@Test
-    public void goToLoginPage_ValidUrl_Success() 
+    public void goToLoginPageAndReturn_ValidUrl_Success() 
     {		
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("#logging");
 		super.titleNotAssertion("SKYski Project", "Unload home page");
 		super.titleAssertion("SKYski Logging", "Load sign in page");
+		super.retryingFindClickElementByCss(".container > a:first-of-type");
+		super.titleNotAssertion("SKYski Logging", "Unload sign in page");
+		super.titleAssertion("SKYski Project", "Load home page");
     }
 	
 	@Test
