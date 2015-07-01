@@ -110,10 +110,12 @@ public abstract class BasicTestAction extends BasicTestConfig
             { 
             	this.getWebDriver().findElement(_by).click();
                 result = true;
+                this.toSystemOut("[TEST][SUCCESS] Click element identified by " + _by.toString());
                 break;
             } 
-            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
-            catch (WebDriverException wde) { this.toSystemOut("[WEBDRIVER] " + wde.getMessage()); }
+            catch (StaleElementReferenceException sere) 
+            { this.toSystemOut("[TEST][STALE] " + sere.getMessage()); }
+            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
             attempt++;
         }
         return result;
@@ -128,10 +130,11 @@ public abstract class BasicTestAction extends BasicTestConfig
             try 
             { 
             	result = this.getWebDriver().findElement(_by).getText();
+            	this.toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
                 break;
             } 
-            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
-            catch (WebDriverException wde) { this.toSystemOut("[WEBDRIVER] " + wde.getMessage()); }
+            catch (StaleElementReferenceException sere) { this.toSystemOut("[TEST][STALE] " + sere.getMessage()); }
+            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
             attempt++;
         }
         return result;
@@ -175,8 +178,8 @@ public abstract class BasicTestAction extends BasicTestConfig
 	            	html.sendKeys(Keys.chord(_charSequences));
 	                break;
 	            } 
-	            catch (StaleElementReferenceException sere) { this.toSystemOut("[STALE] " + sere.getMessage()); }
-	            catch (WebDriverException wde) { this.toSystemOut("[WEBDRIVER] " + wde.getMessage()); }
+	            catch (StaleElementReferenceException sere) { this.toSystemOut("[TEST][STALE] " + sere.getMessage()); }
+	            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
 	            attempt++;
 	        }
     	}
@@ -193,11 +196,12 @@ public abstract class BasicTestAction extends BasicTestConfig
         try
         {
         	this.waitUntil(ExpectedConditions.titleIs(_title));
+        	this.toSystemOut("[TEST][SUCCESS] " + _text);
         }
         catch (WebDriverException wde)
         {
-        	this.toSystemOut("FAILURE " + _text);
-            fail("FAILURE " + _text);
+        	this.toSystemOut("[TEST][FAILURE] " + _text);
+            fail("[TEST][FAILURE] " + _text);
         }
     }
     
@@ -205,15 +209,13 @@ public abstract class BasicTestAction extends BasicTestConfig
     {
     	try
         {
-    		this.waitUntil(ExpectedConditions.titleIs(_title));
-    		this.toSystemOut("FAILURE " + _text);
-    		fail("FAILURE " + _text);
+    		this.waitUntil(ExpectedConditions.not(ExpectedConditions.titleIs(_title)));
+    		this.toSystemOut("[TEST][SUCCESS] " + _text);
         }
-    	catch (TimeoutException te) { this.toSystemOut("SUCCESS " + _text); }
     	catch (WebDriverException wde)
     	{
-    		this.toSystemOut("FAILURE " + _text);
-    		fail("FAILURE " + _text);
+    		this.toSystemOut("[TEST][FAILURE] " + _text);
+    		fail("[TEST][FAILURE] " + _text);
     	}
     }
     
@@ -268,7 +270,7 @@ public abstract class BasicTestAction extends BasicTestConfig
 		catch (TimeoutException te)
 		{
             logAssertionFailure(_text);
-            fail("FAILURE " + _text);
+            fail("[TEST][FAILURE] " + _text);
         }
 	}
 	
@@ -282,7 +284,7 @@ public abstract class BasicTestAction extends BasicTestConfig
 		catch (TimeoutException te)
 		{
             logAssertionFailure(_text);
-            fail("FAILURE " + _text);
+            fail("[TEST][FAILURE] " + _text);
         }
 	}
 	
