@@ -124,8 +124,9 @@ public abstract class BasicTestAction extends BasicTestConfig
                 break;
             } 
             catch (StaleElementReferenceException sere) 
-            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.staleRegex)); }
-            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
+            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.errorRegex)); }
+            catch (WebDriverException wde) 
+            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(wde.getMessage(), this.errorRegex)); }
             attempt++;
         }
         return result;
@@ -143,8 +144,10 @@ public abstract class BasicTestAction extends BasicTestConfig
             	this.toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
                 break;
             } 
-            catch (StaleElementReferenceException sere) { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.staleRegex)); }
-            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
+            catch (StaleElementReferenceException sere) 
+            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.errorRegex)); }
+            catch (WebDriverException wde) 
+            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(wde.getMessage(), this.errorRegex)); }
             attempt++;
         }
         return result;
@@ -189,8 +192,9 @@ public abstract class BasicTestAction extends BasicTestConfig
 	                break;
 	            } 
 	            catch (StaleElementReferenceException sere) 
-	            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.staleRegex)); }
-	            catch (WebDriverException wde) { this.toSystemOut("[TEST][WEBDRIVER] " + wde.getMessage()); }
+	            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.errorRegex)); }
+	            catch (WebDriverException wde) 
+	            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(wde.getMessage(), this.errorRegex)); }
 	            attempt++;
 	        }
     	}
@@ -231,9 +235,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     }
     
     public <V> V waitUntil(Function<? super WebDriver, V> _isTrue)
-    {
-    	return new WebDriverWait(this.getWebDriver(), super.config.getTimeout()).until(_isTrue);
-    }
+    { return new WebDriverWait(this.getWebDriver(), super.config.getTimeout()).until(_isTrue); }
     
 	public void sortAssertion(
 		String _sortButton, String _firstElement, String _secondElement, boolean _isPreSorted
@@ -256,20 +258,26 @@ public abstract class BasicTestAction extends BasicTestConfig
 			By.cssSelector(_firstElement), firstTextBeforeSort
 		));
 		String firstTextAfterSort = this.retryingFindTextElementByCss(_firstElement);
-		String lastTextAfterSort = this.retryingFindTextElementByCss(_secondElement);
-		assertEquals(firstTextBeforeSort, lastTextAfterSort);
+		String lastTextAfterSort = this.retryingFindTextElementByCss(_secondElement);		
+		assertEquals(firstTextBeforeSort, lastTextAfterSort);		
 		assertEquals(lastTextBeforeSort, firstTextAfterSort);
+		this.toSystemOut(
+			"[TEST][SUCCESS] Correct sorting - before: first->" + firstTextBeforeSort.substring(0, 10) +
+				((firstTextBeforeSort.length() > 10) ? "..." : "") + 
+					" last->" + lastTextBeforeSort.substring(0, 10) + 
+						((lastTextBeforeSort.length() > 10) ? "..." : "") +
+						" - after: first->" + firstTextAfterSort.substring(0, 10) +
+					((firstTextAfterSort.length() > 10) ? "..." : "") +
+				" last->" + lastTextAfterSort.substring(0, 10) +
+			((lastTextAfterSort.length() > 10) ? "..." : "")
+		);
 	}
 	
 	public void elementPresentAssertionByCss(String _cssSelector, String _text)
-	{
-		this.elementPresentAssertion(By.cssSelector(_cssSelector), _text);
-	}
+	{ this.elementPresentAssertion(By.cssSelector(_cssSelector), _text); }
 	
 	public void elementAbsentAssertionByCss(String _cssSelector, String _text)
-	{
-		this.elementPresentAssertion(By.cssSelector(_cssSelector), _text);
-	}
+	{ this.elementPresentAssertion(By.cssSelector(_cssSelector), _text); }
 	
 	public void elementPresentAssertion(By _by, String _text)
 	{
@@ -316,8 +324,8 @@ public abstract class BasicTestAction extends BasicTestConfig
     {
     	this.logAssertion(_text, true);
     }
-
-    private final String staleRegex = "[\\w\\s]+";
+    
+    private final String errorRegex = ".+?(?=Command duration or timeout)";
     private WebDriver currentWebDriver;
     private String currentStage;
 }

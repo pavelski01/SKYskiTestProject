@@ -13,7 +13,7 @@ public class HomePage extends BasicTestCase
     public void goToHomePage_ValidUrl_Success() 
 	{
 		super.resetScreen();
-		super.adjustScreen();
+		super.adjustScreen();		
 	}
 	
 	@Test
