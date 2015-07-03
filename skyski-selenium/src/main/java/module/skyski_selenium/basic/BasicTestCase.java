@@ -9,9 +9,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
-
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
@@ -41,13 +39,6 @@ public class BasicTestCase extends BasicTestAction
         private void watcherToSystemOut(String _description)
         { BasicTestCase.super.toSystemOut("[WATCHER]" + _description.toString()); }
 	};
-	
-	@AfterClass
-    public static void tearDownAfterClass()
-	{ 
-		BasicTestCase.setUpIsDone = false;
-		new BasicTestCase().getWebDriver().get("http://localhost:8080/skyski");
-	}
 	
 	@After
 	public void tearDown()

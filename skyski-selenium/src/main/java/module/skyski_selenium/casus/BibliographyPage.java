@@ -28,14 +28,18 @@ public class BibliographyPage extends BasicTestCase
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("#bibliography");
+		super.titleNotAssertion("SKYski Project", "Unload home page");
 		super.titleAssertion("SKYski Bibliography", "Load bibliography page");
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("form > a:nth-of-type(2)");
+		super.titleNotAssertion("SKYski Bibliography", "Unload bibliography page");
 		super.titleAssertion("Bibliografia SKYski", "Load home bibliography in polish");
 		super.retryingFindClickElementByCss("form > a:last-of-type");
+		super.titleNotAssertion("Bibliografia SKYski", "Unload home bibliography in polish");
 		super.titleAssertion("Библиография SKYski", "Load home bibliography in russian");
 		super.retryingFindClickElementByCss("form > a:first-of-type");
+		super.titleNotAssertion("Библиография SKYski", "Unload home bibliography in russian");
 		super.titleAssertion("SKYski Bibliography", "Load home bibliography in english");
     }
 	
@@ -45,6 +49,7 @@ public class BibliographyPage extends BasicTestCase
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("#bibliography");
+		super.titleNotAssertion("SKYski Project", "Unload home page");
 		super.titleAssertion("SKYski Bibliography", "Load bibliography page");
 		super.resetScreen();
 		super.adjustScreen();
@@ -55,6 +60,7 @@ public class BibliographyPage extends BasicTestCase
 			false
 		);		
 		super.retryingFindClickElementByCss("form > a:nth-of-type(2)");
+		super.titleNotAssertion("SKYski Bibliography", "Unload bibliography page");
 		super.titleAssertion("Bibliografia SKYski", "Load home bibliography in polish");
 		super.sortAssertion(
 			"form table > thead > tr > td:nth-of-type(2) > a",
@@ -63,6 +69,7 @@ public class BibliographyPage extends BasicTestCase
 			false
 		);
 		super.retryingFindClickElementByCss("form > a:last-of-type");
+		super.titleNotAssertion("Bibliografia SKYski", "Unload home bibliography in polish");
 		super.titleAssertion("Библиография SKYski", "Load home bibliography in russian");
 		super.sortAssertion(
 			"form table > thead > tr > td:nth-of-type(2) > a",
@@ -78,6 +85,7 @@ public class BibliographyPage extends BasicTestCase
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("#bibliography");
+		super.titleNotAssertion("SKYski Project", "Unload home page");
 		super.titleAssertion("SKYski Bibliography", "Load bibliography page");
 		super.resetScreen();
 		super.adjustScreen();
@@ -88,6 +96,7 @@ public class BibliographyPage extends BasicTestCase
 			false
 		);		
 		super.retryingFindClickElementByCss("form > a:nth-of-type(2)");
+		super.titleNotAssertion("SKYski Bibliography", "Unload bibliography page");
 		super.titleAssertion("Bibliografia SKYski", "Load home bibliography in polish");
 		super.sortAssertion(
 			"form table > thead > tr > td:nth-of-type(3) > a",
@@ -96,6 +105,7 @@ public class BibliographyPage extends BasicTestCase
 			false
 		);
 		super.retryingFindClickElementByCss("form > a:last-of-type");
+		super.titleNotAssertion("Bibliografia SKYski", "Unload home bibliography in polish");
 		super.titleAssertion("Библиография SKYski", "Load home bibliography in russian");
 		super.sortAssertion(
 			"form table > thead > tr > td:nth-of-type(3) > a",
@@ -111,6 +121,7 @@ public class BibliographyPage extends BasicTestCase
 		super.resetScreen();
 		super.adjustScreen();
 		super.retryingFindClickElementByCss("#bibliography");
+		super.titleNotAssertion("SKYski Project", "Unload home page");
 		super.titleAssertion("SKYski Bibliography", "Load bibliography page");
 		super.resetScreen();
 		super.adjustScreen();
@@ -121,6 +132,7 @@ public class BibliographyPage extends BasicTestCase
 			false
 		);		
 		super.retryingFindClickElementByCss("form > a:nth-of-type(2)");
+		super.titleNotAssertion("SKYski Bibliography", "Unload bibliography page");
 		super.titleAssertion("Bibliografia SKYski", "Load home bibliography in polish");
 		super.sortAssertion(
 			"form table > thead > tr > td:nth-of-type(4) > a",
@@ -129,6 +141,7 @@ public class BibliographyPage extends BasicTestCase
 			false
 		);
 		super.retryingFindClickElementByCss("form > a:last-of-type");
+		super.titleNotAssertion("Bibliografia SKYski", "Unload home bibliography in polish");
 		super.titleAssertion("Библиография SKYski", "Load home bibliography in russian");
 		super.sortAssertion(
 			"form table > thead > tr > td:nth-of-type(4) > a",
