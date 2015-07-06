@@ -1,16 +1,17 @@
 package module.skyski_selenium.basic;
 
 import org.openqa.selenium.WebDriver;
-import module.skyski_selenium.config.Configuration;
+
+import module.skyski_selenium.config.core.ConfigurationSingleton;
 
 public abstract class BasicTestConfig
 {
 	public BasicTestConfig()
 	{
-		this.config = Configuration.getSingletonInstance();
-		this.webDrivers = Configuration.getDrivers();
+		this.config = ConfigurationSingleton.getSingletonInstance();
+		this.webDrivers = ConfigurationSingleton.getDrivers();
 	}
 	
-	protected Configuration config;
+	protected ConfigurationSingleton config;
 	protected WebDriver[] webDrivers;
 }

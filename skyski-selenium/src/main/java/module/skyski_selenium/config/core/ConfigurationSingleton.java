@@ -1,4 +1,4 @@
-package module.skyski_selenium.config;
+package module.skyski_selenium.config.core;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -16,42 +16,43 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-public final class Configuration
+public final class ConfigurationSingleton
 {
     /* CONSTRUCTOR */
-    public Configuration()
+    public ConfigurationSingleton()
     {
         final String
             BROWSER_KEY = "browser", DEBUG_KEY = "debug",
             STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
         Properties properties = this.getProperties();
         this.browser = properties.getProperty(BROWSER_KEY);
-        if (this.browser == null) this.browser = Configuration.EMPTY;
+        if (this.browser == null) this.browser = ConfigurationSingleton.EMPTY;
         else this.analyzeBrowser(this.browser);
         this.debug = Boolean.parseBoolean(properties.getProperty(DEBUG_KEY));
         this.timeout = Integer.parseInt(properties.getProperty(TIMEOUT_KEY));
         this.stage = properties.getProperty(STAGE_KEY);
-        if (this.stage == null) this.stage = Configuration.EMPTY;
+        if (this.stage == null) this.stage = ConfigurationSingleton.EMPTY;
         else this.analyzeStage(this.stage, properties);
     }
 
-    public static Configuration getSingletonInstance()
+    public static ConfigurationSingleton getSingletonInstance()
     {
-        if (singletonInstance == null) singletonInstance = new Configuration();
-        return singletonInstance;
+        if (ConfigurationSingleton.singletonInstance == null) 
+        	ConfigurationSingleton.singletonInstance = new ConfigurationSingleton();
+        return ConfigurationSingleton.singletonInstance;
     }
     
     public static String getStatusToString(boolean _status)
     {
-        if (_status) return Configuration.SUCCESS;
-        else return Configuration.FAILURE;
+        if (_status) return ConfigurationSingleton.SUCCESS;
+        else return ConfigurationSingleton.FAILURE;
     }
     
-    public static WebDriver[] getDrivers() { return Configuration.webDrivers; }
+    public static WebDriver[] getDrivers() { return ConfigurationSingleton.webDrivers; }
 
     private void analyzeStage(String _stage, Properties _properties)
     {
-        if (_stage.equals(Configuration.EMPTY)) return;
+        if (_stage.equals(ConfigurationSingleton.EMPTY)) return;
         final String DELIMITER = "|";
         final char D_CASE = 'd', P_CASE = 'p', T_CASE = 't';
         final String DEV_STAGE = "dev", PROD_STAGE = "prod", TEST_STAGE = "test";
@@ -77,7 +78,7 @@ public final class Configuration
 
     private void analyzeBrowser(String _browser)
     {
-        if (_browser.equals(Configuration.EMPTY)) return;
+        if (_browser.equals(ConfigurationSingleton.EMPTY)) return;
         final String DELIMITER = "|";
         final char C_CASE = 'c', F_CASE = 'f';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
@@ -99,7 +100,7 @@ public final class Configuration
             }
         }
         WebDriver[] webDriverArray = new WebDriver[webDriverList.size()];
-        Configuration.webDrivers = webDriverList.toArray(webDriverArray);
+        ConfigurationSingleton.webDrivers = webDriverList.toArray(webDriverArray);
     }
 
     private WebDriver getChromeWebDriverInstance()
@@ -138,10 +139,10 @@ public final class Configuration
         String coreValue4 = _properties.getProperty(coreKey4);
         if
         (
-            coreValue1 != null && !coreValue1.equals(Configuration.EMPTY) &&
-                coreValue2 != null && !coreValue2.equals(Configuration.EMPTY) &&
-                	coreValue3 != null && !coreValue3.equals(Configuration.EMPTY) &&
-                		coreValue4 != null && !coreValue4.equals(Configuration.EMPTY)
+            coreValue1 != null && !coreValue1.equals(ConfigurationSingleton.EMPTY) &&
+                coreValue2 != null && !coreValue2.equals(ConfigurationSingleton.EMPTY) &&
+                	coreValue3 != null && !coreValue3.equals(ConfigurationSingleton.EMPTY) &&
+                		coreValue4 != null && !coreValue4.equals(ConfigurationSingleton.EMPTY)
         )
         {
             this.setUpReflectionData(coreKey1, coreValue1);
@@ -155,7 +156,7 @@ public final class Configuration
                 {
                     temporaryKey = _stagePrefix + state + record;
                     temporaryValue = _properties.getProperty(temporaryKey);
-                    if (temporaryValue == null) temporaryValue = Configuration.EMPTY;
+                    if (temporaryValue == null) temporaryValue = ConfigurationSingleton.EMPTY;
                     this.setUpReflectionData(temporaryKey, temporaryValue);
                 }
         }
@@ -167,7 +168,7 @@ public final class Configuration
         catch (IllegalAccessException iaEX)
         {
             final String ILLEGAL = "Illegal access:";
-            System.out.println(ILLEGAL + Configuration.GAP + iaEX.toString());
+            System.out.println(ILLEGAL + ConfigurationSingleton.GAP + iaEX.toString());
         }
     }
 
@@ -177,7 +178,7 @@ public final class Configuration
         catch (NoSuchFieldException nsfEX)
         {
             final String NO_FIELD = "Field not exist:";
-            System.out.print(NO_FIELD + Configuration.GAP + nsfEX.toString());
+            System.out.print(NO_FIELD + ConfigurationSingleton.GAP + nsfEX.toString());
             return null;
         }
     }
@@ -188,7 +189,7 @@ public final class Configuration
         	FILE_SEPARATOR = System.getProperty("file.separator"),
             PROPERTIES_NAME = "configuration.properties",
             PROPERTIES_PATH = 
-            	Configuration.class.getProtectionDomain().
+            	ConfigurationSingleton.class.getProtectionDomain().
         		getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
         		"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + "config";
         Properties properties = new Properties();
@@ -207,8 +208,8 @@ public final class Configuration
                 PROPERTIES_ERROR_MSG1 = "Problem with load",
                 PROPERTIES_ERROR_MSG2 = "configuration file:";
             System.out.println(
-                PROPERTIES_ERROR_MSG1 + Configuration.GAP + PROPERTIES_NAME + Configuration.GAP +
-                    PROPERTIES_ERROR_MSG2 + Configuration.GAP + ioEX.toString()
+                PROPERTIES_ERROR_MSG1 + ConfigurationSingleton.GAP + PROPERTIES_NAME + ConfigurationSingleton.GAP +
+                    PROPERTIES_ERROR_MSG2 + ConfigurationSingleton.GAP + ioEX.toString()
             );
             if (inputStream != null)
             {
@@ -216,7 +217,7 @@ public final class Configuration
                 catch (IOException io2EX)
                 {
                     final String STREAM_ERROR_MSG = "Problem with close input stream:";
-                    System.out.println(STREAM_ERROR_MSG + Configuration.GAP + io2EX.toString());
+                    System.out.println(STREAM_ERROR_MSG + ConfigurationSingleton.GAP + io2EX.toString());
                 }
             }
         }
@@ -332,6 +333,6 @@ public final class Configuration
         prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
     private static final String 
         EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
-    private static Configuration singletonInstance;
+    private static ConfigurationSingleton singletonInstance;
     private static WebDriver[] webDrivers;
 }
