@@ -45,13 +45,13 @@ public class BasicTestCase extends BasicTestAction
 	{ super.retryingFindClickElementByCss("form > a:first-of-type"); }
 	
 	@Before
-    public void setUpBefore() throws Exception
+    public void setupBefore() throws Exception
 	{		
 		if (!BasicTestCase.setUpIsDone)
 		{
 			new Thread(new LoginWindow()).start();
 			super.getWebDriver().get("http://localhost:8080/skyski");
-			super.setUpTimeout(super.config.getTimeout());
+			super.setupTimeout(super.config.getTimeout());
 			BasicTestCase.setUpIsDone = true;
 		}
 		super.getWebDriver().get("http://localhost:8080/skyski");		

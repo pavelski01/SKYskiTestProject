@@ -3,6 +3,7 @@ package module.skyski_selenium.basic;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,16 +22,26 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
+import module.skyski_selenium.config.dto.StageDataDTO;
+import module.skyski_selenium.config.dto.WebDriverDTO;
+
 public abstract class BasicTestAction extends BasicTestConfig
 {
 	public BasicTestAction()
 	{ 
 		super();
-		if (super.config.getWebDrivers().get(0).getWebDriver() != null) 
+		if (super.config.getWebDrivers().get(0).getWebDriver() != null)
+		{
 			this.currentWebDriver =
 				super.config.getWebDrivers().get(0).getWebDriver();
-		if (super.config.getStagesData().get(0).getStage() != null) 
+			this.webDriversPortage = super.config.getWebDrivers();
+			
+		}
+		if (super.config.getStagesData().get(0).getStage() != null)
+		{
 			this.currentStage = super.config.getStagesData().get(0).getStage();
+			this.stagesDataPortage = super.config.getStagesData();
+		}
 	}
 	
 	public void toSystemOut(String _text)
@@ -41,7 +52,7 @@ public abstract class BasicTestAction extends BasicTestConfig
 			);
 	}
 	
-	public void setUpTimeout(int _seconds)
+	public void setupTimeout(int _seconds)
 	{
 		this.currentWebDriver.manage().timeouts().implicitlyWait(_seconds, TimeUnit.SECONDS);
     }
@@ -53,9 +64,12 @@ public abstract class BasicTestAction extends BasicTestConfig
 		);
     }
     
+    public ArrayList<WebDriverDTO> getWebDrivers() { return this.webDriversPortage; }
+    public ArrayList<StageDataDTO> getStagesData() { return this.stagesDataPortage; }
     public WebDriver getWebDriver() { return this.currentWebDriver; }
-    
     public String getStage() { return this.currentStage; }
+    public void setWebDriver(WebDriver _webDriver) { this.currentWebDriver = _webDriver; }
+    public void setStage(String _stage) { this.currentStage = _stage; }
     
     public WebElement findElementBy(By _by)
     { return this.getWebDriver().findElement(_by); }
@@ -292,4 +306,6 @@ public abstract class BasicTestAction extends BasicTestConfig
     private final String errorRegex = ".+?(?=Command duration or timeout)";
     private WebDriver currentWebDriver;
     private String currentStage;
+    private ArrayList<StageDataDTO> stagesDataPortage;
+    private ArrayList<WebDriverDTO> webDriversPortage;
 }

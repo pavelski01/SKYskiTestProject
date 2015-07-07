@@ -179,11 +179,10 @@ public final class ConfigurationSingleton
 
     private void setupReflectionData(String _temporaryKey, String _temporaryValue, Object _ob)
     {
-    	Class<? extends Object> cl  = _ob.getClass();
-    	Field field;
+    	Class<? extends Object> cl = _ob.getClass();
+    	Field field = null;
 		try 
-		{ 
-			
+		{
 			field = cl.getDeclaredField(_temporaryKey);
 			field.setAccessible(true);
 			field.set(_ob, _temporaryValue);
