@@ -86,7 +86,7 @@ public class BasicTestCase extends BasicTestAction
 			);        	
             Robot robot = new Robot();
             StringSelection username = 
-        		new StringSelection(BasicTestCase.super.config.getDevBasicCredentialUser());
+        		new StringSelection(BasicTestCase.super.config.getStagesData().get(0).getBasicCredentialUser());
             clipboard.setContents(username, null);            
             robot.keyPress(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_V);
@@ -96,7 +96,7 @@ public class BasicTestCase extends BasicTestAction
             robot.keyRelease(KeyEvent.VK_TAB);
             Thread.sleep(2000);
             StringSelection passwd = 
-        		new StringSelection(BasicTestCase.super.config.getDevBasicCredentialPassword());
+        		new StringSelection(BasicTestCase.super.config.getStagesData().get(0).getBasicCredentialPassword());
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(passwd, null);
             robot.keyPress(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_V);

@@ -8,6 +8,9 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import module.skyski_selenium.config.dto.StageDataDTO;
+import module.skyski_selenium.config.dto.WebDriverDTO;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,14 +28,14 @@ public final class ConfigurationSingleton
             BROWSER_KEY = "browser", DEBUG_KEY = "debug",
             STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
         Properties properties = this.getProperties();
-        this.browser = properties.getProperty(BROWSER_KEY);
-        if (this.browser == null) this.browser = ConfigurationSingleton.EMPTY;
-        else this.analyzeBrowser(this.browser);
+        String browser = properties.getProperty(BROWSER_KEY);
+        if (browser == null) browser = ConfigurationSingleton.EMPTY;
+        else this.analyzeBrowser(browser);
         this.debug = Boolean.parseBoolean(properties.getProperty(DEBUG_KEY));
         this.timeout = Integer.parseInt(properties.getProperty(TIMEOUT_KEY));
-        this.stage = properties.getProperty(STAGE_KEY);
-        if (this.stage == null) this.stage = ConfigurationSingleton.EMPTY;
-        else this.analyzeStage(this.stage, properties);
+        String stage = properties.getProperty(STAGE_KEY);
+        if (stage == null) stage = ConfigurationSingleton.EMPTY;
+        else this.analyzeStage(stage, properties);
     }
 
     public static ConfigurationSingleton getSingletonInstance()
@@ -47,8 +50,6 @@ public final class ConfigurationSingleton
         if (_status) return ConfigurationSingleton.SUCCESS;
         else return ConfigurationSingleton.FAILURE;
     }
-    
-    public static WebDriver[] getDrivers() { return ConfigurationSingleton.webDrivers; }
 
     private void analyzeStage(String _stage, Properties _properties)
     {
@@ -58,6 +59,7 @@ public final class ConfigurationSingleton
         final String DEV_STAGE = "dev", PROD_STAGE = "prod", TEST_STAGE = "test";
         StringTokenizer stageStringTokenizer = new StringTokenizer(_stage, DELIMITER);
         String token;
+        this.stagesData = new ArrayList<StageDataDTO>();
         while (stageStringTokenizer.hasMoreTokens())
         {
             token = stageStringTokenizer.nextToken().toLowerCase();
@@ -82,25 +84,29 @@ public final class ConfigurationSingleton
         final String DELIMITER = "|";
         final char C_CASE = 'c', F_CASE = 'f';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
-        String token;
-        ArrayList<WebDriver> webDriverList = new ArrayList<WebDriver>();
+        String token;        
+        ArrayList<WebDriverDTO> webDrivers = new ArrayList<WebDriverDTO>();
+        WebDriverDTO webDriverTransport;
         while (browserStringTokenizer.hasMoreTokens())
         {
             token = browserStringTokenizer.nextToken().toLowerCase();
             switch (token.charAt(0))
             {
-                case C_CASE:
-                    this.chromeWebDriver = this.getChromeWebDriverInstance();
-                    webDriverList.add(this.chromeWebDriver);
+                case C_CASE:                    
+                    webDriverTransport = new WebDriverDTO();
+                    webDriverTransport.setBrowser("chrome");
+                    webDriverTransport.setWebDriver(this.getChromeWebDriverInstance());
+                    webDrivers.add(webDriverTransport);                
                     break;
-                case F_CASE:
-                    this.firefoxWebDriver = this.getFirefoxWebDriverInstance();
-                    webDriverList.add(this.firefoxWebDriver);
+                case F_CASE:                    
+                    webDriverTransport = new WebDriverDTO();
+                    webDriverTransport.setBrowser("firefox");
+                    webDriverTransport.setWebDriver(this.getFirefoxWebDriverInstance());
+                    webDrivers.add(webDriverTransport);                 
                     break;
             }
         }
-        WebDriver[] webDriverArray = new WebDriver[webDriverList.size()];
-        ConfigurationSingleton.webDrivers = webDriverList.toArray(webDriverArray);
+        this.webDrivers = webDrivers;
     }
 
     private WebDriver getChromeWebDriverInstance()
@@ -129,10 +135,12 @@ public final class ConfigurationSingleton
 
     private void initializeStage(String _stagePrefix, Properties _properties)
     {
-        String coreKey1 = _stagePrefix + this.core[0];
-        String coreKey2 = _stagePrefix + this.core[1];
-        String coreKey3 = _stagePrefix + this.core[2];
-        String coreKey4 = _stagePrefix + this.core[3];
+    	StageDataDTO stageDataTransport = new StageDataDTO();
+    	stageDataTransport.setStage(_stagePrefix);
+        String coreKey1 = _stagePrefix + "BaseURL";
+        String coreKey2 = _stagePrefix + "BasePort";
+        String coreKey3 = _stagePrefix + "BasicCredentialUser";
+        String coreKey4 = _stagePrefix + "BasicCredentialPassword";
         String coreValue1 = _properties.getProperty(coreKey1);
         String coreValue2 = _properties.getProperty(coreKey2);
         String coreValue3 = _properties.getProperty(coreKey3);
@@ -145,42 +153,62 @@ public final class ConfigurationSingleton
                 		coreValue4 != null && !coreValue4.equals(ConfigurationSingleton.EMPTY)
         )
         {
-            this.setUpReflectionData(coreKey1, coreValue1);
-            this.setUpReflectionData(coreKey2, coreValue2);
-            this.setUpReflectionData(coreKey3, coreValue3);
-            this.setUpReflectionData(coreKey4, coreValue4);
+        	stageDataTransport.setBaseUrl(coreValue1);
+        	stageDataTransport.setBasePort(coreValue2);
+        	stageDataTransport.setBasicCredentialUser(coreValue3);
+        	stageDataTransport.setBasicCredentialPassword(coreValue4);
             final String[] realFake = { "Real", "Fake" };
+            final String[] data =
+            {
+            	"Login", "Password", "Email", "Forename", "Surname",
+                "StreetAddress", "PostalCity", "PostalCode", "Phone"
+            };
             String temporaryKey, temporaryValue;
             for (String state : realFake)
-                for (String record : this.data)
+                for (String record : data)
                 {
                     temporaryKey = _stagePrefix + state + record;
                     temporaryValue = _properties.getProperty(temporaryKey);
+                    temporaryKey = state.toLowerCase() + record;
                     if (temporaryValue == null) temporaryValue = ConfigurationSingleton.EMPTY;
-                    this.setUpReflectionData(temporaryKey, temporaryValue);
+                    this.setupReflectionData(temporaryKey, temporaryValue, stageDataTransport);
                 }
         }
+    	this.stagesData.add(stageDataTransport);
     }
 
-    private void setUpReflectionData(String _temporaryKey, String _temporaryValue)
+    private void setupReflectionData(String _temporaryKey, String _temporaryValue, Object _ob)
     {
-        try { this.getFiled(_temporaryKey).set(this, _temporaryValue); }
-        catch (IllegalAccessException iaEX)
-        {
-            final String ILLEGAL = "Illegal access:";
-            System.out.println(ILLEGAL + ConfigurationSingleton.GAP + iaEX.toString());
-        }
-    }
-
-    private Field getFiled(String _name)
-    {
-        try { return this.getClass().getDeclaredField(_name); }
-        catch (NoSuchFieldException nsfEX)
-        {
-            final String NO_FIELD = "Field not exist:";
-            System.out.print(NO_FIELD + ConfigurationSingleton.GAP + nsfEX.toString());
-            return null;
-        }
+    	Class<? extends Object> cl  = _ob.getClass();
+    	Field field;
+		try 
+		{ 
+			
+			field = cl.getDeclaredField(_temporaryKey);
+			field.setAccessible(true);
+			field.set(_ob, _temporaryValue);
+			field.setAccessible(false);
+		}
+		catch (IllegalAccessException _iae)
+		{
+			final String ILLEGAL_ACCESS = "Illegal access:";
+            System.out.println(ILLEGAL_ACCESS + ConfigurationSingleton.GAP + _iae.toString());
+		}
+		catch (IllegalArgumentException _iae)
+		{
+			final String ILLEGAL_ARGUMENT = "Illegal argument:";
+            System.out.println(ILLEGAL_ARGUMENT + ConfigurationSingleton.GAP + _iae.toString());
+		} 
+		catch (NoSuchFieldException _nsfe) 
+		{ 
+			final String NO_FIELD = "No field:";
+            System.out.println(NO_FIELD + ConfigurationSingleton.GAP + _nsfe.toString());
+		} 
+		catch (SecurityException _se) 
+		{ 
+			final String SECURITY = "Securuty:";
+            System.out.println(SECURITY + ConfigurationSingleton.GAP + _se.toString());
+		}
     }
 
     private Properties getProperties()
@@ -190,8 +218,9 @@ public final class ConfigurationSingleton
             PROPERTIES_NAME = "configuration.properties",
             PROPERTIES_PATH = 
             	ConfigurationSingleton.class.getProtectionDomain().
-        		getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
-        		"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + "config";
+        			getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
+        				"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + 
+        					"config";
         Properties properties = new Properties();
         InputStream inputStream = null;
         try
@@ -202,22 +231,23 @@ public final class ConfigurationSingleton
 				);
             properties.load(inputStream);
         }
-        catch (IOException ioEX)
+        catch (IOException _ioe1)
         {
             final String
                 PROPERTIES_ERROR_MSG1 = "Problem with load",
                 PROPERTIES_ERROR_MSG2 = "configuration file:";
             System.out.println(
-                PROPERTIES_ERROR_MSG1 + ConfigurationSingleton.GAP + PROPERTIES_NAME + ConfigurationSingleton.GAP +
-                    PROPERTIES_ERROR_MSG2 + ConfigurationSingleton.GAP + ioEX.toString()
+                PROPERTIES_ERROR_MSG1 + ConfigurationSingleton.GAP + 
+                	PROPERTIES_NAME + ConfigurationSingleton.GAP +
+                		PROPERTIES_ERROR_MSG2 + ConfigurationSingleton.GAP + _ioe1.toString()
             );
             if (inputStream != null)
             {
                 try { inputStream.close(); }
-                catch (IOException io2EX)
+                catch (IOException _ioe2)
                 {
                     final String STREAM_ERROR_MSG = "Problem with close input stream:";
-                    System.out.println(STREAM_ERROR_MSG + ConfigurationSingleton.GAP + io2EX.toString());
+                    System.out.println(STREAM_ERROR_MSG + ConfigurationSingleton.GAP + _ioe2.toString());
                 }
             }
         }
@@ -226,113 +256,16 @@ public final class ConfigurationSingleton
 
     /* GETTERS */
     public boolean isDebug() { return this.debug; }
-    public WebDriver getFirefoxWebDriver() { return this.firefoxWebDriver; }
-    public WebDriver getChromeWebDriver() { return this.chromeWebDriver; }
-    public WebDriver getOperaWebDriver() { return this.operaWebDriver; }
     public int getTimeout() { return this.timeout; }
-    public String getStage() { return this.stage; }
-    public String getDevBaseURL() { return this.devBaseURL; }
-    public String getDevBasePort() { return this.devBasePort; }    
-    public String getDevBasicCredentialUser() { return this.devBasicCredentialUser; }
-    public String getDevBasicCredentialPassword() { return this.devBasicCredentialPassword; }    
-    public String getDevRealLogin() { return this.devRealLogin; }
-    public String getDevRealPassword() { return this.devRealPassword; }
-    public String getDevRealEmail() { return this.devRealEmail; }
-    public String getDevRealForename() { return this.devRealForename; }
-    public String getDevRealSurname() { return this.devRealSurname; }
-    public String getDevRealStreetAddress() { return this.devRealStreetAddress; }
-    public String getDevRealPostalCity() { return this.devRealPostalCity; }
-    public String getDevRealPostalCode() { return this.devRealPostalCode; }
-    public String getDevRealPhone() { return this.devRealPhone; }
-    public String getDevFakeLogin() { return this.devFakeLogin; }
-    public String getDevFakePassword() { return this.devFakePassword; }
-    public String getDevFakeEmail() { return this.devFakeEmail; }
-    public String getDevFakeForename() { return this.devFakeForename; }
-    public String getDevFakeSurname() { return this.devFakeSurname; }
-    public String getDevFakeStreetAddress() { return this.devFakeStreetAddress; }
-    public String getDevFakePostalCity() { return this.devFakePostalCity; }
-    public String getDevFakePostalCode() { return this.devFakePostalCode; }
-    public String getDevFakePhone() { return this.devFakePhone; }
-    public String getTestBaseURL() { return this.testBaseURL; }
-    public String getTestBasePort() { return this.testBasePort; }
-    public String getTestBasicCredentialUser() { return this.testBasicCredentialUser; }
-    public String getTestBasicCredentialPassword() { return this.testBasicCredentialPassword; }
-    public String getTestRealLogin() { return this.testRealLogin; }
-    public String getTestRealPassword() { return this.testRealPassword; }
-    public String getTestRealEmail() { return this.testRealEmail; }
-    public String getTestRealForename() { return this.testRealForename; }
-    public String getTestRealSurname() { return this.testRealSurname; }
-    public String getTestRealStreetAddress() { return this.testRealStreetAddress; }
-    public String getTestRealPostalCity() { return this.testRealPostalCity; }
-    public String getTestRealPostalCode() { return this.testRealPostalCode; }
-    public String getTestRealPhone() { return this.testRealPhone; }
-    public String getTestFakeLogin() { return this.testFakeLogin; }
-    public String getTestFakePassword() { return this.testFakePassword; }
-    public String getTestFakeEmail() { return this.testFakeEmail; }
-    public String getTestFakeForename() { return this.testFakeForename; }
-    public String getTestFakeSurname() { return this.testFakeSurname; }
-    public String getTestFakeStreetAddress() { return this.testFakeStreetAddress; }
-    public String getTestFakePostalCity() { return this.testFakePostalCity; }
-    public String getTestFakePostalCode() { return this.testFakePostalCode; }
-    public String getTestFakePhone() { return this.testFakePhone; }
-    public String getProdBaseURL() { return this.prodBaseURL; }
-    public String getProdBasePort() { return this.prodBasePort; }
-    public String getProdBasicCredentialUser() { return this.prodBasicCredentialUser; }
-    public String getProdBasicCredentialPassword() { return this.prodBasicCredentialPassword; }
-    public String getProdRealLogin() { return this.prodRealLogin; }
-    public String getProdRealPassword() { return this.prodRealPassword; }
-    public String getProdRealEmail() { return this.prodRealEmail; }
-    public String getProdRealForename() { return this.prodRealForename; }
-    public String getProdRealSurname() { return this.prodRealSurname; }
-    public String getProdRealStreetAddress() { return this.prodRealStreetAddress; }
-    public String getProdRealPostalCity() { return this.prodRealPostalCity; }
-    public String getProdRealPostalCode() { return this.prodRealPostalCode; }
-    public String getProdRealPhone() { return this.prodRealPhone; }
-    public String getProdFakeLogin() { return this.prodFakeLogin; }
-    public String getProdFakePassword() { return this.prodFakePassword; }
-    public String getProdFakeEmail() { return this.prodFakeEmail; }
-    public String getProdFakeForename() { return this.prodFakeForename; }
-    public String getProdFakeSurname() { return this.prodFakeSurname; }
-    public String getProdFakeStreetAddress() { return this.prodFakeStreetAddress; }
-    public String getProdFakePostalCity() { return this.prodFakePostalCity; }
-    public String getProdFakePostalCode() { return this.prodFakePostalCode; }
-    public String getProdFakePhone() { return this.prodFakePhone; }
+    public ArrayList<StageDataDTO> getStagesData() { return this.stagesData; }
+    public ArrayList<WebDriverDTO> getWebDrivers() { return this.webDrivers; }
 
     /* VARIABLES */
     private boolean debug;
-    private WebDriver chromeWebDriver, firefoxWebDriver, operaWebDriver;
     private int timeout;
-    private final String[] core = 
-	{ "BaseURL", "BasePort", "BasicCredentialUser", "BasicCredentialPassword" };
-    private final String[] data =
-    {
-    	"Login", "Password", "Email", "Forename", "Surname",
-        "StreetAddress", "PostalCity", "PostalCode", "Phone"
-    };
-    private String browser, stage;
-    private String devBaseURL, devBasePort, devBasicCredentialUser, devBasicCredentialPassword;
-    private String
-        devRealLogin, devRealPassword, devRealEmail, devRealForename, devRealSurname,
-        devRealStreetAddress, devRealPostalCity, devRealPostalCode, devRealPhone;
-    private String
-        devFakeLogin, devFakePassword, devFakeEmail, devFakeForename, devFakeSurname,
-        devFakeStreetAddress, devFakePostalCity, devFakePostalCode, devFakePhone;
-    private String testBaseURL, testBasePort, testBasicCredentialUser, testBasicCredentialPassword;
-    private String
-        testRealLogin, testRealPassword, testRealEmail, testRealForename, testRealSurname,
-        testRealStreetAddress, testRealPostalCity, testRealPostalCode, testRealPhone;
-    private String
-        testFakeLogin, testFakePassword, testFakeEmail, testFakeForename, testFakeSurname,
-        testFakeStreetAddress, testFakePostalCity, testFakePostalCode, testFakePhone;
-    private String prodBaseURL, prodBasePort, prodBasicCredentialUser, prodBasicCredentialPassword;;
-    private String
-        prodRealLogin, prodRealPassword, prodRealEmail, prodRealForename, prodRealSurname,
-        prodRealStreetAddress, prodRealPostalCity, prodRealPostalCode, prodRealPhone;
-    private String
-        prodFakeLogin, prodFakePassword, prodFakeEmail, prodFakeForename, prodFakeSurname,
-        prodFakeStreetAddress, prodFakePostalCity, prodFakePostalCode, prodFakePhone;
     private static final String 
         EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
     private static ConfigurationSingleton singletonInstance;
-    private static WebDriver[] webDrivers;
+    private ArrayList<WebDriverDTO> webDrivers;
+    private ArrayList<StageDataDTO> stagesData;
 }

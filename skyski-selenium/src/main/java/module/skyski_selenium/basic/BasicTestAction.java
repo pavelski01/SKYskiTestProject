@@ -26,12 +26,11 @@ public abstract class BasicTestAction extends BasicTestConfig
 	public BasicTestAction()
 	{ 
 		super();
-		if (super.webDrivers[0] != null) 
-			this.currentWebDriver = super.webDrivers[0];
-		this.currentStage = 
-			super.config.getStage().contains("|") ? 
-			super.config.getStage().split("|")[0] :
-			super.config.getStage();
+		if (super.config.getWebDrivers().get(0).getWebDriver() != null) 
+			this.currentWebDriver =
+				super.config.getWebDrivers().get(0).getWebDriver();
+		if (super.config.getStagesData().get(0).getStage() != null) 
+			this.currentStage = super.config.getStagesData().get(0).getStage();
 	}
 	
 	public void toSystemOut(String _text)
@@ -54,44 +53,9 @@ public abstract class BasicTestAction extends BasicTestConfig
 		);
     }
     
-    public WebDriver getWebDriver() { return this.currentWebDriver; }    
-    
-    public void nextWebDriver()
-    {
-    	if (this.currentWebDriver != null)
-	    	for (int i = 0; i < super.webDrivers.length; i++)
-	    		if 
-	    		(
-    				super.webDrivers[i] == this.currentWebDriver
-    					&& i != super.webDrivers.length - 1
-				)
-	    		{
-	    			this.currentWebDriver = super.webDrivers[i + 1];
-	    			break;
-	    		}    				
-    }
+    public WebDriver getWebDriver() { return this.currentWebDriver; }
     
     public String getStage() { return this.currentStage; }
-    
-    public void nextStage()
-    {
-    	if (super.config.getStage().contains("|")) 
-    	{
-    		String[] stages = super.config.getStage().split("|");
-    		for (int stageCounter = 0; stageCounter < stages.length; stageCounter++)
-    		{
-    			if 
-    			(
-					stages[stageCounter].equals(this.currentStage) &&
-						stageCounter != stages.length - 1
-				)
-    			{
-    				this.currentStage = stages[stageCounter + 1];
-    				break;
-    			}
-    		}
-    	}
-    }
     
     public WebElement findElementBy(By _by)
     { return this.getWebDriver().findElement(_by); }
