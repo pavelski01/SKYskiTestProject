@@ -1,4 +1,4 @@
-package module.skyski_selenium.config.core;
+package module.skyski_selenium.config;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -8,8 +8,8 @@ import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import module.skyski_selenium.config.dto.StageDataDTO;
-import module.skyski_selenium.config.dto.WebDriverDTO;
+import module.skyski_selenium.dto.StageDataDTO;
+import module.skyski_selenium.dto.WebDriverDTO;
 
 import java.io.FileInputStream;
 import java.io.IOException;

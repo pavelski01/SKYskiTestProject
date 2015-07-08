@@ -22,8 +22,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
-import module.skyski_selenium.config.dto.StageDataDTO;
-import module.skyski_selenium.config.dto.WebDriverDTO;
+import module.skyski_selenium.dto.StageDataDTO;
+import module.skyski_selenium.dto.WebDriverDTO;
 
 public abstract class BasicTestAction extends BasicTestConfig
 {

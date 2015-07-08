@@ -1,4 +1,4 @@
-package module.skyski_selenium.config.dto;
+package module.skyski_selenium.dto;
 
 import org.openqa.selenium.WebDriver;
 

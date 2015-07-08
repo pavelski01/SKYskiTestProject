@@ -1,6 +1,6 @@
 package module.skyski_selenium.basic;
 
-import module.skyski_selenium.config.core.ConfigurationSingleton;
+import module.skyski_selenium.config.ConfigurationSingleton;
 
 public abstract class BasicTestConfig
 {
