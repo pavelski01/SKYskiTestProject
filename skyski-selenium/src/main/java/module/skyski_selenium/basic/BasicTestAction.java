@@ -52,7 +52,7 @@ public abstract class BasicTestAction extends BasicTestConfig
 			);
 	}
 	
-	public void setupTimeout(int _seconds)
+	public void setUpTimeout(int _seconds)
 	{
 		this.currentWebDriver.manage().timeouts().implicitlyWait(_seconds, TimeUnit.SECONDS);
     }

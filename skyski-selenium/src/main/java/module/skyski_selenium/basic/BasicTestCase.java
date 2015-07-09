@@ -45,13 +45,13 @@ public class BasicTestCase extends BasicTestAction
 	{ super.retryingFindClickElementByCss("form > a:first-of-type"); }
 	
 	@Before
-    public void setupBefore() throws Exception
+    public void setUpBefore() throws Exception
 	{		
 		if (!BasicTestCase.setUpIsDone)
 		{
 			new Thread(new LoginWindow()).start();
 			super.getWebDriver().get("http://localhost:8080/skyski");
-			super.setupTimeout(super.config.getTimeout());
+			super.setUpTimeout(super.config.getTimeout());
 			BasicTestCase.setUpIsDone = true;
 		}
 		super.getWebDriver().get("http://localhost:8080/skyski");		
@@ -64,8 +64,8 @@ public class BasicTestCase extends BasicTestAction
         public void run()
         { 
         	try { login(); }
-        	catch (Exception ex) 
-        	{ BasicTestCase.super.toSystemOut("[WATCHER] " + ex.getMessage()); }
+        	catch (Exception _e) 
+        	{ BasicTestCase.super.toSystemOut("[WATCHER] " + _e.getMessage()); }
         }
 
         public void login() throws AWTException, InterruptedException, UnsupportedFlavorException 

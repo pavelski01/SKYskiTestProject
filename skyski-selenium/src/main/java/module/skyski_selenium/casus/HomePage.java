@@ -10,14 +10,14 @@ import org.junit.runners.MethodSorters;
 public class HomePage extends BasicTestCase
 {
 	@Test
-    public void goToHomePage_ValidUrl_Success() 
+    public void homePageShouldLoad_ValidUrl_Success() 
 	{
 		super.resetScreen();
 		super.adjustScreen();		
 	}
 	
 	@Test
-    public void changeLanguageOnHomePage_PolishRussianEnglish_Success() 
+    public void HomePageShouldChangeLanguage_PolishRussianEnglish_Success() 
 	{
 		super.resetScreen();
 		super.adjustScreen();

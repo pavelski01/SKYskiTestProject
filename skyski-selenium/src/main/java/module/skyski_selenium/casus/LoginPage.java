@@ -10,7 +10,7 @@ import module.skyski_selenium.basic.BasicTestCase;
 public class LoginPage extends BasicTestCase
 {
 	@Test
-    public void goToLoginPageAndReturn_ValidUrl_Success() 
+    public void loginPageShouldLoadAndUnload_ValidUrl_Success() 
     {		
 		super.resetScreen();
 		super.adjustScreen();
@@ -23,7 +23,7 @@ public class LoginPage extends BasicTestCase
     }
 	
 	@Test
-    public void changeLanguageOnLoginPage_PolishRussianEnglish_Success() 
+    public void LoginPageShouldChangeLanguage_PolishRussianEnglish_Success() 
     {		
 		super.resetScreen();
 		super.adjustScreen();

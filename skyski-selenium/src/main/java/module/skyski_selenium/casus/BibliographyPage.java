@@ -10,7 +10,7 @@ import module.skyski_selenium.basic.BasicTestCase;
 public class BibliographyPage extends BasicTestCase
 {
 	@Test
-    public void goToBibliographyPageAndReturn_ValidUrl_Success() 
+    public void bibliographyPageShouldLoadAndU_ValidUrl_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
@@ -23,7 +23,7 @@ public class BibliographyPage extends BasicTestCase
     }
 	
 	@Test
-    public void changeLanguageOnBibliographyPage_PolishRussianEnglish_Success() 
+    public void bibliographyPageShouldChangeLanguage_PolishRussianEnglish_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
@@ -44,7 +44,7 @@ public class BibliographyPage extends BasicTestCase
     }
 	
 	@Test
-    public void sortByAuthorsOnBibliographyPage_AuthorsEnglishPolishRussian_Success() 
+    public void BibliographyPageShouldSortByAuthors_AuthorsEnglishPolishRussian_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
@@ -80,7 +80,7 @@ public class BibliographyPage extends BasicTestCase
     }
 	
 	@Test
-    public void sortByTitlesOnBibliographyPage_TitlesEnglishPolishRussian_Success() 
+    public void BibliographyPageShouldSortByTitles_TitlesEnglishPolishRussian_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
@@ -116,7 +116,7 @@ public class BibliographyPage extends BasicTestCase
     }
 	
 	@Test
-    public void sortByPlaceAndYearOfPublicationOnBibliographyPage_PlaceAndYearOfPublicationEnglishPolishRussian_Success() 
+    public void BibliographyPageShouldSortByPlaceAndYearOfPublication_PlaceAndYearOfPublicationEnglishPolishRussian_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
