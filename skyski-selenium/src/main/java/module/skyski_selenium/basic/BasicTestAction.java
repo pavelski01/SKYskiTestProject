@@ -85,7 +85,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     	Pattern aPattern = Pattern.compile(_regex);
     	Matcher aMatcher = aPattern.matcher(_source);
     	if (aMatcher.find()) return aMatcher.group();
-    	else return "No matches";
+    	else return _source;
     }
     
     public boolean retryingFindClickElementBy(By _by)
