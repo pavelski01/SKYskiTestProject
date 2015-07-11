@@ -50,11 +50,13 @@ public abstract class BasicTestCase extends BasicTestAction
 		if (!BasicTestCase.setUpIsDone)
 		{
 			new Thread(new LoginWindow()).start();
-			super.getConfiguration().getWebDriver().get("http://localhost:8080/skyski");
+			super.getConfiguration().getWebDriverDetails().getWebDriver().get(
+				super.getConfiguration().getStageDetails().getBaseUrl()
+			);
 			super.setUpTimeout(super.getConfiguration().getTimeout());
 			BasicTestCase.setUpIsDone = true;
 		}
-		super.getConfiguration().getWebDriver().get("http://localhost:8080/skyski");		
+		super.getConfiguration().getWebDriverDetails().getWebDriver().get("http://localhost:8080/skyski");		
 		super.titleAssertion("SKYski Project", "Load home page");
 	}
 	

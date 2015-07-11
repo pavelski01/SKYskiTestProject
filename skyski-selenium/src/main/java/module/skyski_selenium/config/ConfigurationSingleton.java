@@ -37,9 +37,9 @@ public final class ConfigurationSingleton
         if (stage == null) stage = ConfigurationSingleton.EMPTY;
         else this.analyzeStage(stage, properties);
         if (this.getWebDrivers().get(0).getWebDriver() != null)
-			this.currentWebDriver = this.getWebDrivers().get(0).getWebDriver();
+			this.webDriverDetails = this.getWebDrivers().get(0);
 		if (this.getStagesData().get(0).getStage() != null)
-			this.currentStage = this.getStagesData().get(0).getStage();
+			this.stageDetails = this.getStagesData().get(0);
     }
 
     public static ConfigurationSingleton getSingletonInstance()
@@ -259,15 +259,15 @@ public final class ConfigurationSingleton
 
     /* GETTERS */
     public boolean isDebug() { return this.debug; }
-    public int getTimeout() { return this.timeout; }
-    public WebDriver getWebDriver() { return this.currentWebDriver; }
-    public String getStage() { return this.currentStage; }
+    public int getTimeout() { return this.timeout; }   
+    public StageDataDTO getStageDetails() { return this.stageDetails; }
+    public WebDriverDTO getWebDriverDetails() { return this.webDriverDetails; }
     public ArrayList<StageDataDTO> getStagesData() { return this.stagesData; }
     public ArrayList<WebDriverDTO> getWebDrivers() { return this.webDrivers; }
     
     /* SETTERS */
-    public void setWebDriver(WebDriver _webDriver) { this.currentWebDriver = _webDriver; }
-    public void setStage(String _stage) { this.currentStage = _stage; }
+    public void setStageDetails(StageDataDTO _stage) { this.stageDetails = _stage; }
+    public void setWebDriverDetails(WebDriverDTO _webDriver) { this.webDriverDetails = _webDriver; }
 
     /* VARIABLES */
     private boolean debug;
@@ -275,8 +275,8 @@ public final class ConfigurationSingleton
     private static final String 
         EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
     private static ConfigurationSingleton singletonInstance;
-    private WebDriver currentWebDriver;
-    private String currentStage;
+    private StageDataDTO stageDetails;
+    private WebDriverDTO webDriverDetails;    
     private ArrayList<WebDriverDTO> webDrivers;
     private ArrayList<StageDataDTO> stagesData;
 }

@@ -1,12 +1,10 @@
-package module.skyski_selenium.enforcement;
+package module.skyski_selenium.enforce;
 
 import java.lang.reflect.Field;
 
 import org.junit.runner.Computer;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunNotifier;
-
-import module.skyski_selenium.kit.AllTests;
 
 public class DefaultExecution
 {

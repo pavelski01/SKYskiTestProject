@@ -36,20 +36,20 @@ public abstract class BasicTestAction extends BasicTestConfig
 	
 	public void setUpTimeout(int _seconds)
 	{
-		super.getConfiguration().getWebDriver().manage().timeouts().implicitlyWait(
+		super.getConfiguration().getWebDriverDetails().getWebDriver().manage().timeouts().implicitlyWait(
 			_seconds, TimeUnit.SECONDS
 		);
     }
 
     public void resetTimeout()
     {
-    	super.getConfiguration().getWebDriver().manage().timeouts().implicitlyWait(
+    	super.getConfiguration().getWebDriverDetails().getWebDriver().manage().timeouts().implicitlyWait(
 			super.getConfiguration().getTimeout(), TimeUnit.SECONDS
 		);
     }
     
     public WebElement findElementBy(By _by)
-    { return super.getConfiguration().getWebDriver().findElement(_by); }
+    { return super.getConfiguration().getWebDriverDetails().getWebDriver().findElement(_by); }
     
     public WebElement findElementByXpath(String _xpathSelector)
     { return this.findElementBy(By.xpath(_xpathSelector)); }
@@ -73,7 +73,7 @@ public abstract class BasicTestAction extends BasicTestConfig
         {
             try 
             { 
-            	super.getConfiguration().getWebDriver().findElement(_by).click();
+            	super.getConfiguration().getWebDriverDetails().getWebDriver().findElement(_by).click();
                 result = true;
                 this.toSystemOut("[TEST][SUCCESS] Click element identified by " + _by.toString());
                 break;
@@ -95,7 +95,7 @@ public abstract class BasicTestAction extends BasicTestConfig
         {
             try 
             { 
-            	result = super.getConfiguration().getWebDriver().findElement(_by).getText();
+            	result = super.getConfiguration().getWebDriverDetails().getWebDriver().findElement(_by).getText();
             	this.toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
                 break;
             } 
@@ -122,13 +122,13 @@ public abstract class BasicTestAction extends BasicTestConfig
     
     public void domClick(WebElement _element)
     {
-        JavascriptExecutor javascriptExecutor = (JavascriptExecutor)super.getConfiguration().getWebDriver();
+        JavascriptExecutor javascriptExecutor = (JavascriptExecutor)super.getConfiguration().getWebDriverDetails().getWebDriver();
         javascriptExecutor.executeScript("arguments[0].click();", _element);
     }
 
     public void hoverClick(WebElement _element)
     {
-        Actions actions = new Actions(super.getConfiguration().getWebDriver());
+        Actions actions = new Actions(super.getConfiguration().getWebDriverDetails().getWebDriver());
         actions.moveToElement(_element).click().build().perform();
     }
     
@@ -190,7 +190,11 @@ public abstract class BasicTestAction extends BasicTestConfig
     }
     
     public <V> V waitUntil(Function<? super WebDriver, V> _isTrue)
-    { return new WebDriverWait(super.getConfiguration().getWebDriver(), super.getConfiguration().getTimeout()).until(_isTrue); }
+    { 
+    	return new WebDriverWait(
+			super.getConfiguration().getWebDriverDetails().getWebDriver(), super.getConfiguration().getTimeout()
+		).until(_isTrue);
+	}
     
 	public void sortAssertion(
 		String _sortButton, String _firstElement, String _secondElement, boolean _isPreSorted
