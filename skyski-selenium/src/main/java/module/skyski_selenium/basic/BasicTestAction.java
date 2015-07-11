@@ -3,7 +3,6 @@ package module.skyski_selenium.basic;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,31 +21,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
-import module.skyski_selenium.dto.StageDataDTO;
-import module.skyski_selenium.dto.WebDriverDTO;
-
 public abstract class BasicTestAction extends BasicTestConfig
 {
 	public BasicTestAction()
-	{ 
-		super();
-		if (super.config.getWebDrivers().get(0).getWebDriver() != null)
-		{
-			this.currentWebDriver =
-				super.config.getWebDrivers().get(0).getWebDriver();
-			this.webDriversPortage = super.config.getWebDrivers();
-			
-		}
-		if (super.config.getStagesData().get(0).getStage() != null)
-		{
-			this.currentStage = super.config.getStagesData().get(0).getStage();
-			this.stagesDataPortage = super.config.getStagesData();
-		}
-	}
+	{ super(); }
 	
 	public void toSystemOut(String _text)
 	{ 
-		if (super.config.isDebug())
+		if (super.getConfiguration().isDebug())
 			System.out.println(
 				"[DEBUG]" + ((_text.startsWith("[") ? "" : " ") + _text)
 			);
@@ -54,25 +36,20 @@ public abstract class BasicTestAction extends BasicTestConfig
 	
 	public void setUpTimeout(int _seconds)
 	{
-		this.currentWebDriver.manage().timeouts().implicitlyWait(_seconds, TimeUnit.SECONDS);
+		super.getConfiguration().getWebDriver().manage().timeouts().implicitlyWait(
+			_seconds, TimeUnit.SECONDS
+		);
     }
 
     public void resetTimeout()
     {
-		this.currentWebDriver.manage().timeouts().implicitlyWait(
-			super.config.getTimeout(), TimeUnit.SECONDS
+    	super.getConfiguration().getWebDriver().manage().timeouts().implicitlyWait(
+			super.getConfiguration().getTimeout(), TimeUnit.SECONDS
 		);
     }
     
-    public ArrayList<WebDriverDTO> getWebDrivers() { return this.webDriversPortage; }
-    public ArrayList<StageDataDTO> getStagesData() { return this.stagesDataPortage; }
-    public WebDriver getWebDriver() { return this.currentWebDriver; }
-    public String getStage() { return this.currentStage; }
-    public void setWebDriver(WebDriver _webDriver) { this.currentWebDriver = _webDriver; }
-    public void setStage(String _stage) { this.currentStage = _stage; }
-    
     public WebElement findElementBy(By _by)
-    { return this.getWebDriver().findElement(_by); }
+    { return super.getConfiguration().getWebDriver().findElement(_by); }
     
     public WebElement findElementByXpath(String _xpathSelector)
     { return this.findElementBy(By.xpath(_xpathSelector)); }
@@ -96,15 +73,15 @@ public abstract class BasicTestAction extends BasicTestConfig
         {
             try 
             { 
-            	this.getWebDriver().findElement(_by).click();
+            	super.getConfiguration().getWebDriver().findElement(_by).click();
                 result = true;
                 this.toSystemOut("[TEST][SUCCESS] Click element identified by " + _by.toString());
                 break;
             } 
-            catch (StaleElementReferenceException sere) 
-            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.errorRegex)); }
-            catch (WebDriverException wde) 
-            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(wde.getMessage(), this.errorRegex)); }
+            catch (StaleElementReferenceException _sere) 
+            { this.toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
+            catch (WebDriverException _wde) 
+            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
             attempt++;
         }
         return result;
@@ -118,14 +95,14 @@ public abstract class BasicTestAction extends BasicTestConfig
         {
             try 
             { 
-            	result = this.getWebDriver().findElement(_by).getText();
+            	result = super.getConfiguration().getWebDriver().findElement(_by).getText();
             	this.toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
                 break;
             } 
-            catch (StaleElementReferenceException sere) 
-            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.errorRegex)); }
-            catch (WebDriverException wde) 
-            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(wde.getMessage(), this.errorRegex)); }
+            catch (StaleElementReferenceException _sere) 
+            { this.toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
+            catch (WebDriverException _wde) 
+            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
             attempt++;
         }
         return result;
@@ -145,13 +122,13 @@ public abstract class BasicTestAction extends BasicTestConfig
     
     public void domClick(WebElement _element)
     {
-        JavascriptExecutor javascriptExecutor = (JavascriptExecutor)this.getWebDriver();
+        JavascriptExecutor javascriptExecutor = (JavascriptExecutor)super.getConfiguration().getWebDriver();
         javascriptExecutor.executeScript("arguments[0].click();", _element);
     }
 
     public void hoverClick(WebElement _element)
     {
-        Actions actions = new Actions(this.getWebDriver());
+        Actions actions = new Actions(super.getConfiguration().getWebDriver());
         actions.moveToElement(_element).click().build().perform();
     }
     
@@ -191,7 +168,7 @@ public abstract class BasicTestAction extends BasicTestConfig
         	this.waitUntil(ExpectedConditions.titleIs(_title));
         	this.toSystemOut("[TEST][SUCCESS] " + _text);
         }
-        catch (WebDriverException wde)
+        catch (WebDriverException _wde)
         {
         	this.toSystemOut("[TEST][FAILURE] " + _text);
             fail("[TEST][FAILURE] " + _text);
@@ -205,7 +182,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     		this.waitUntil(ExpectedConditions.not(ExpectedConditions.titleIs(_title)));
     		this.toSystemOut("[TEST][SUCCESS] " + _text);
         }
-    	catch (WebDriverException wde)
+    	catch (WebDriverException _wde)
     	{
     		this.toSystemOut("[TEST][FAILURE] " + _text);
     		fail("[TEST][FAILURE] " + _text);
@@ -213,7 +190,7 @@ public abstract class BasicTestAction extends BasicTestConfig
     }
     
     public <V> V waitUntil(Function<? super WebDriver, V> _isTrue)
-    { return new WebDriverWait(this.getWebDriver(), super.config.getTimeout()).until(_isTrue); }
+    { return new WebDriverWait(super.getConfiguration().getWebDriver(), super.getConfiguration().getTimeout()).until(_isTrue); }
     
 	public void sortAssertion(
 		String _sortButton, String _firstElement, String _secondElement, boolean _isPreSorted
@@ -264,7 +241,7 @@ public abstract class BasicTestAction extends BasicTestConfig
 			this.waitUntil(ExpectedConditions.presenceOfElementLocated(_by));
 			this.logAssertionSuccess(_text);
         }
-		catch (TimeoutException te)
+		catch (TimeoutException _te)
 		{
             logAssertionFailure(_text);
             fail("[TEST][FAILURE] " + _text);
@@ -278,7 +255,7 @@ public abstract class BasicTestAction extends BasicTestConfig
 			this.waitUntil(ExpectedConditions.invisibilityOfElementLocated(_by));
 			this.logAssertionSuccess(_text);
         }
-		catch (TimeoutException te)
+		catch (TimeoutException _te)
 		{
             logAssertionFailure(_text);
             fail("[TEST][FAILURE] " + _text);
@@ -294,18 +271,10 @@ public abstract class BasicTestAction extends BasicTestConfig
 	}
 	
 	public void logAssertionFailure(String _text)
-	{
-		this.logAssertion(_text, false);
-    }
+	{ this.logAssertion(_text, false); }
 
     public void logAssertionSuccess(String _text)
-    {
-    	this.logAssertion(_text, true);
-    }
+    { this.logAssertion(_text, true); }
     
     private final String errorRegex = ".+?(?=Command duration or timeout)";
-    private WebDriver currentWebDriver;
-    private String currentStage;
-    private ArrayList<StageDataDTO> stagesDataPortage;
-    private ArrayList<WebDriverDTO> webDriversPortage;
 }

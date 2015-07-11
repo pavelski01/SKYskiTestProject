@@ -36,6 +36,10 @@ public final class ConfigurationSingleton
         String stage = properties.getProperty(STAGE_KEY);
         if (stage == null) stage = ConfigurationSingleton.EMPTY;
         else this.analyzeStage(stage, properties);
+        if (this.getWebDrivers().get(0).getWebDriver() != null)
+			this.currentWebDriver = this.getWebDrivers().get(0).getWebDriver();
+		if (this.getStagesData().get(0).getStage() != null)
+			this.currentStage = this.getStagesData().get(0).getStage();
     }
 
     public static ConfigurationSingleton getSingletonInstance()
@@ -256,8 +260,14 @@ public final class ConfigurationSingleton
     /* GETTERS */
     public boolean isDebug() { return this.debug; }
     public int getTimeout() { return this.timeout; }
+    public WebDriver getWebDriver() { return this.currentWebDriver; }
+    public String getStage() { return this.currentStage; }
     public ArrayList<StageDataDTO> getStagesData() { return this.stagesData; }
     public ArrayList<WebDriverDTO> getWebDrivers() { return this.webDrivers; }
+    
+    /* SETTERS */
+    public void setWebDriver(WebDriver _webDriver) { this.currentWebDriver = _webDriver; }
+    public void setStage(String _stage) { this.currentStage = _stage; }
 
     /* VARIABLES */
     private boolean debug;
@@ -265,6 +275,8 @@ public final class ConfigurationSingleton
     private static final String 
         EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
     private static ConfigurationSingleton singletonInstance;
+    private WebDriver currentWebDriver;
+    private String currentStage;
     private ArrayList<WebDriverDTO> webDrivers;
     private ArrayList<StageDataDTO> stagesData;
 }

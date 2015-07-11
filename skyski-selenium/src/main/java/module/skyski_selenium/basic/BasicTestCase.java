@@ -15,7 +15,7 @@ import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.Description;
 
-public class BasicTestCase extends BasicTestAction
+public abstract class BasicTestCase extends BasicTestAction
 {
 	@Rule
 	public TestName testName = new TestName()
@@ -50,11 +50,11 @@ public class BasicTestCase extends BasicTestAction
 		if (!BasicTestCase.setUpIsDone)
 		{
 			new Thread(new LoginWindow()).start();
-			super.getWebDriver().get("http://localhost:8080/skyski");
-			super.setUpTimeout(super.config.getTimeout());
+			super.getConfiguration().getWebDriver().get("http://localhost:8080/skyski");
+			super.setUpTimeout(super.getConfiguration().getTimeout());
 			BasicTestCase.setUpIsDone = true;
 		}
-		super.getWebDriver().get("http://localhost:8080/skyski");		
+		super.getConfiguration().getWebDriver().get("http://localhost:8080/skyski");		
 		super.titleAssertion("SKYski Project", "Load home page");
 	}
 	
@@ -86,7 +86,10 @@ public class BasicTestCase extends BasicTestAction
 			);        	
             Robot robot = new Robot();
             StringSelection username = 
-        		new StringSelection(BasicTestCase.super.config.getStagesData().get(0).getBasicCredentialUser());
+        		new StringSelection(
+    				BasicTestCase.super.getConfiguration().getStagesData().get(0).
+    					getBasicCredentialUser()
+				);
             clipboard.setContents(username, null);            
             robot.keyPress(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_V);
@@ -96,7 +99,10 @@ public class BasicTestCase extends BasicTestAction
             robot.keyRelease(KeyEvent.VK_TAB);
             Thread.sleep(2000);
             StringSelection passwd = 
-        		new StringSelection(BasicTestCase.super.config.getStagesData().get(0).getBasicCredentialPassword());
+        		new StringSelection(
+    				BasicTestCase.super.getConfiguration().getStagesData().get(0).
+    					getBasicCredentialPassword()
+				);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(passwd, null);
             robot.keyPress(KeyEvent.VK_CONTROL);
             robot.keyPress(KeyEvent.VK_V);

@@ -6,9 +6,10 @@ public abstract class BasicTestConfig
 {
 	public BasicTestConfig()
 	{ 
-		this.config = 
+		this.configuration = 
 			ConfigurationSingleton.getSingletonInstance();
 	}
 	
-	protected ConfigurationSingleton config;
-}
+	public ConfigurationSingleton getConfiguration() { return this.configuration; }
+	
+	private ConfigurationSingleton configuration;}
