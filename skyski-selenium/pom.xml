@@ -58,7 +58,7 @@
 		        			<directory>${basedir}/src/main/java/module/skyski_selenium/config</directory>
 		        			<filtering>false</filtering>
 		        			<includes>
-		          				<include>**/*.properties</include>
+		          				<include>**/*</include>
 		        			</includes>
 		      			</resource>
 		    		</resources>

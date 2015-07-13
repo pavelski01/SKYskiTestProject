@@ -5,7 +5,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import module.skyski_selenium.dto.StageDataDTO;
@@ -18,6 +17,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 public final class ConfigurationSingleton
 {
@@ -115,17 +115,25 @@ public final class ConfigurationSingleton
 
     private WebDriver getChromeWebDriverInstance()
     {
+    	final String path = "/src/main/java/module/skyski_selenium/config/chromedriver";
+    	if (path != null && !path.equals(""))
+    	{
+	    	System.setProperty("webdriver.chrome.driver", path);
+	    	System.setProperty("webdriver.chrome.bin", path);
+    	}
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("start-maximized");
+        chromeOptions.addArguments("start-maximized, no-sandbox");
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
         desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-        return new ChromeDriver(desiredCapabilities);
+        ChromeDriver chromeDriver = new ChromeDriver(desiredCapabilities);
+        chromeDriver.manage().timeouts().implicitlyWait(this.getTimeout(), TimeUnit.SECONDS);
+        chromeDriver.manage().window().maximize();
+        return chromeDriver;
     }
 
     private WebDriver getFirefoxWebDriverInstance()
     {
-    	ProfilesIni profileIni = new ProfilesIni();
-        FirefoxProfile firefoxProfile = profileIni.getProfile("qa");
+        FirefoxProfile firefoxProfile = new FirefoxProfile();
         firefoxProfile.setPreference("browser.private.browsing.autostart", true);
         firefoxProfile.setPreference("network.http.phishy-userpass-length", 255);
         firefoxProfile.setPreference("network.automatic-ntlm-auth.trusted-uris", "localhost");
@@ -133,6 +141,7 @@ public final class ConfigurationSingleton
         firefoxProfile.setPreference("signon.autologin.proxy", true);
         firefoxProfile.setPreference("webdriver.load.strategy", "unstable");        
         FirefoxDriver firefoxDriver = new FirefoxDriver(firefoxProfile);
+        firefoxDriver.manage().timeouts().implicitlyWait(this.getTimeout(), TimeUnit.SECONDS);
         firefoxDriver.manage().window().maximize();
         return firefoxDriver;
     }
@@ -141,26 +150,22 @@ public final class ConfigurationSingleton
     {
     	StageDataDTO stageDataTransport = new StageDataDTO();
     	stageDataTransport.setStage(_stagePrefix);
-        String coreKey1 = _stagePrefix + "BaseURL";
-        String coreKey2 = _stagePrefix + "BasePort";
-        String coreKey3 = _stagePrefix + "BasicCredentialUser";
-        String coreKey4 = _stagePrefix + "BasicCredentialPassword";
+        String coreKey1 = _stagePrefix + "AppURL";
+        String coreKey2 = _stagePrefix + "BasicCredentialUser";
+        String coreKey3 = _stagePrefix + "BasicCredentialPassword";
         String coreValue1 = _properties.getProperty(coreKey1);
         String coreValue2 = _properties.getProperty(coreKey2);
         String coreValue3 = _properties.getProperty(coreKey3);
-        String coreValue4 = _properties.getProperty(coreKey4);
         if
         (
             coreValue1 != null && !coreValue1.equals(ConfigurationSingleton.EMPTY) &&
                 coreValue2 != null && !coreValue2.equals(ConfigurationSingleton.EMPTY) &&
-                	coreValue3 != null && !coreValue3.equals(ConfigurationSingleton.EMPTY) &&
-                		coreValue4 != null && !coreValue4.equals(ConfigurationSingleton.EMPTY)
+                	coreValue3 != null && !coreValue3.equals(ConfigurationSingleton.EMPTY)
         )
         {
-        	stageDataTransport.setBaseUrl(coreValue1);
-        	stageDataTransport.setBasePort(coreValue2);
-        	stageDataTransport.setBasicCredentialUser(coreValue3);
-        	stageDataTransport.setBasicCredentialPassword(coreValue4);
+        	stageDataTransport.setAppUrl(coreValue1);
+        	stageDataTransport.setBasicCredentialUser(coreValue2);
+        	stageDataTransport.setBasicCredentialPassword(coreValue3);
             final String[] realFake = { "Real", "Fake" };
             final String[] data =
             {

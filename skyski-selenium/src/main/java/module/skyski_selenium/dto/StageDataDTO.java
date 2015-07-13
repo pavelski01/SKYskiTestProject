@@ -4,8 +4,7 @@ public class StageDataDTO
 {
 	/* GETTERS */
 	public String getStage() { return this.stage; }
-	public String getBaseUrl() { return this.baseUrl; }
-	public String getBasePort() { return this.basePort; }
+	public String getAppUrl() { return this.appUrl; }
 	public String getBasicCredentialUser() { return this.basicCredentialUser; }
 	public String getBasicCredentialPassword() { return this.basicCredentialPassword; }
 	public String getRealLogin() { return this.realLogin; }
@@ -30,8 +29,7 @@ public class StageDataDTO
 	public String getFakePhone() { return this.fakePhone; }
 	/* SETTERS */
 	public void setStage(String _stage) { this.stage = _stage; }
-	public void setBaseUrl(String _baseUrl) { this.baseUrl = _baseUrl; }
-	public void setBasePort(String _basePort) { this.basePort = _basePort; }
+	public void setAppUrl(String _appUrl) { this.appUrl = _appUrl; }
 	public void setBasicCredentialUser(String _basicCredentialUser)
 	{ this.basicCredentialUser = _basicCredentialUser; }
 	public void setBasicCredentialPassword(String _basicCredentialPassword) 
@@ -66,8 +64,7 @@ public class StageDataDTO
 	public void setFakePhone(String _fakePhone) { this.fakePhone = _fakePhone; }
 	
 	private String stage;
-	private String baseUrl;
-	private String basePort;
+	private String appUrl;
 	private String basicCredentialUser;
 	private String basicCredentialPassword;
 	private String realLogin;

@@ -4,10 +4,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import module.skyski_selenium.basic.BasicTestCase;
+import module.skyski_selenium.fixture.TestCaseFixture;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class BibliographyPage extends BasicTestCase
+public class BibliographyPage extends TestCaseFixture
 {
 	@Test
     public void bibliographyPageShouldLoadAndU_ValidUrl_Success() 

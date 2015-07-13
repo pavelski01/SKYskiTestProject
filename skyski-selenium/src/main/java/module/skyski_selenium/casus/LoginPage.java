@@ -4,10 +4,10 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import module.skyski_selenium.basic.BasicTestCase;
+import module.skyski_selenium.fixture.TestCaseFixture;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LoginPage extends BasicTestCase
+public class LoginPage extends TestCaseFixture
 {
 	@Test
     public void loginPageShouldLoadAndUnload_ValidUrl_Success() 

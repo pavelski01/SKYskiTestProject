@@ -1,13 +1,13 @@
 package module.skyski_selenium.casus;
 
-import module.skyski_selenium.basic.BasicTestCase;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import module.skyski_selenium.fixture.TestCaseFixture;
+
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class HomePage extends BasicTestCase
+public class HomePage extends TestCaseFixture
 {
 	@Test
     public void homePageShouldLoad_ValidUrl_Success() 
