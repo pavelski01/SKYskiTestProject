@@ -12,4 +12,5 @@ public abstract class TestConfigurationFixture
 	
 	public ConfigurationSingleton getConfiguration() { return this.configuration; }
 	
-	private ConfigurationSingleton configuration;}
+	private ConfigurationSingleton configuration;
+}

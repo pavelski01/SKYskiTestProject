@@ -59,7 +59,7 @@ public abstract class TestActionFixture extends TestConfigurationFixture
     public String findRegex(String _source, String _regex)
     {
     	Pattern aPattern = Pattern.compile(_regex);
-    	Matcher aMatcher = aPattern.matcher(_source);
+    	Matcher aMatcher = aPattern.matcher(_source.replace("\n", " "));
     	if (aMatcher.find()) return aMatcher.group();
     	else return _source;
     }
@@ -145,10 +145,10 @@ public abstract class TestActionFixture extends TestConfigurationFixture
 	            	html.sendKeys(Keys.chord(_charSequences));
 	                break;
 	            } 
-	            catch (StaleElementReferenceException sere) 
-	            { this.toSystemOut("[TEST][STALE] " + this.findRegex(sere.getMessage(), this.errorRegex)); }
-	            catch (WebDriverException wde) 
-	            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(wde.getMessage(), this.errorRegex)); }
+	            catch (StaleElementReferenceException _sere) 
+	            { this.toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
+	            catch (WebDriverException _wde) 
+	            { this.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
 	            attempt++;
 	        }
     	}
