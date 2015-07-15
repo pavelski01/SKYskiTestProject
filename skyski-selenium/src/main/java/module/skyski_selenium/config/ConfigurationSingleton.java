@@ -54,6 +54,14 @@ public final class ConfigurationSingleton
         if (_status) return ConfigurationSingleton.SUCCESS;
         else return ConfigurationSingleton.FAILURE;
     }
+    
+    public void toSystemOut(String _text)
+	{ 
+		if (this.isDebug())
+			System.out.println(
+				"[DEBUG]" + ((_text.startsWith("[") ? "" : " ") + _text)
+			);
+	}
 
     private void analyzeStage(String _stage, Properties _properties)
     {

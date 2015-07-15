@@ -37,7 +37,7 @@ public abstract class TestCaseFixture extends TestActionFixture
         { this.watcherToSystemOut("[FINISH] " + _description); }
         
         private void watcherToSystemOut(String _description)
-        { TestCaseFixture.super.toSystemOut("[WATCHER]" + _description.toString()); }
+        { TestCaseFixture.super.getConfiguration().toSystemOut("[WATCHER]" + _description.toString()); }
 	};
 	
 	@After
@@ -69,7 +69,7 @@ public abstract class TestCaseFixture extends TestActionFixture
         { 
         	try { login(); }
         	catch (Exception _e) 
-        	{ TestCaseFixture.super.toSystemOut("[WATCHER] " + _e.getMessage()); }
+        	{ TestCaseFixture.super.getConfiguration().toSystemOut("[WATCHER] " + _e.getMessage()); }
         }
 
         public void login() throws AWTException, InterruptedException, UnsupportedFlavorException 
