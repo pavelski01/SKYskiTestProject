@@ -56,7 +56,7 @@ public final class ConfigurationSingleton
     }
     
     public void toSystemOut(String _text)
-	{ 
+	{
 		if (this.isDebug())
 			System.out.println(
 				"[DEBUG]" + ((_text.startsWith("[") ? "" : " ") + _text)
