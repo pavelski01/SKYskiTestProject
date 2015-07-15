@@ -10,8 +10,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 
-import module.skyski_selenium.fixture.TestActionFixture;
-
 public class LoginWindow implements Runnable
 {
 	@Override
@@ -19,7 +17,7 @@ public class LoginWindow implements Runnable
     { 
     	try { login(); }
     	catch (Exception _e) 
-    	{ TestActionFixture.config.toSystemOut("[WATCHER] " + _e.getMessage()); }
+    	{ ConfigurationSingleton.getSingletonInstance().toSystemOut("[WATCHER] " + _e.getMessage()); }
     }
 
     public void login() throws AWTException, InterruptedException, UnsupportedFlavorException 
@@ -41,7 +39,7 @@ public class LoginWindow implements Runnable
         Robot robot = new Robot();
         StringSelection username = 
     		new StringSelection(
-				TestActionFixture.config.getStagesData().get(0).getBasicCredentialUser()
+				ConfigurationSingleton.getSingletonInstance().getStagesData().get(0).getBasicCredentialUser()
 			);
         clipboard.setContents(username, null);            
         robot.keyPress(KeyEvent.VK_CONTROL);
@@ -53,7 +51,7 @@ public class LoginWindow implements Runnable
         Thread.sleep(2000);
         StringSelection passwd = 
     		new StringSelection(
-				TestActionFixture.config.getStagesData().get(0).getBasicCredentialPassword()
+				ConfigurationSingleton.getSingletonInstance().getStagesData().get(0).getBasicCredentialPassword()
 			);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(passwd, null);
         robot.keyPress(KeyEvent.VK_CONTROL);
@@ -62,6 +60,5 @@ public class LoginWindow implements Runnable
         robot.keyRelease(KeyEvent.VK_CONTROL);
         robot.keyPress(KeyEvent.VK_ENTER);
         robot.keyRelease(KeyEvent.VK_ENTER);
-        Thread.sleep(5000);
     }
 }
