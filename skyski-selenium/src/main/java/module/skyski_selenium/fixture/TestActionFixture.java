@@ -279,5 +279,5 @@ public abstract class TestActionFixture extends TestConfigurationFixture
     public void logAssertionSuccess(String _text)
     { this.logAssertion(_text, true); }
     
-    private final String errorRegex = ".+?(?=Command duration or timeout)";
+    private final String errorRegex = "(.+?(?=Command duration or timeout))|(.+?(?=Build info))";
 }
