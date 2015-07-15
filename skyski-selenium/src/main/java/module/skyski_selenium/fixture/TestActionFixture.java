@@ -21,26 +21,30 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
-public abstract class TestActionFixture extends TestConfigurationFixture
+import module.skyski_selenium.config.ConfigurationSingleton;
+
+public abstract class TestActionFixture
 {
 	public TestActionFixture() { super(); }
 	
 	public void setUpTimeout(int _seconds)
 	{
-		super.getConfiguration().getWebDriverDetails().getWebDriver().manage().timeouts().implicitlyWait(
-			_seconds, TimeUnit.SECONDS
-		);
+		TestActionFixture.config.getWebDriverDetails().getWebDriver().
+			manage().timeouts().implicitlyWait(
+				_seconds, TimeUnit.SECONDS
+			);
     }
 
     public void resetTimeout()
     {
-    	super.getConfiguration().getWebDriverDetails().getWebDriver().manage().timeouts().implicitlyWait(
-			super.getConfiguration().getTimeout(), TimeUnit.SECONDS
-		);
+    	TestActionFixture.config.getWebDriverDetails().getWebDriver().
+    		manage().timeouts().implicitlyWait(
+				TestActionFixture.config.getTimeout(), TimeUnit.SECONDS
+			);
     }
     
     public WebElement findElementBy(By _by)
-    { return super.getConfiguration().getWebDriverDetails().getWebDriver().findElement(_by); }
+    { return TestActionFixture.config.getWebDriverDetails().getWebDriver().findElement(_by); }
     
     public WebElement findElementByXpath(String _xpathSelector)
     { return this.findElementBy(By.xpath(_xpathSelector)); }
@@ -64,15 +68,15 @@ public abstract class TestActionFixture extends TestConfigurationFixture
         {
             try 
             { 
-            	super.getConfiguration().getWebDriverDetails().getWebDriver().findElement(_by).click();
+            	TestActionFixture.config.getWebDriverDetails().getWebDriver().findElement(_by).click();
                 result = true;
-                super.getConfiguration().toSystemOut("[TEST][SUCCESS] Click element identified by " + _by.toString());
+                TestActionFixture.config.toSystemOut("[TEST][SUCCESS] Click element identified by " + _by.toString());
                 break;
             }
             catch (StaleElementReferenceException _sere) 
-            { super.getConfiguration().toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
+            { TestActionFixture.config.toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
             catch (WebDriverException _wde)
-            { super.getConfiguration().toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
+            { TestActionFixture.config.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
             attempt++;
         }
         return result;
@@ -86,14 +90,14 @@ public abstract class TestActionFixture extends TestConfigurationFixture
         {
             try 
             { 
-            	result = super.getConfiguration().getWebDriverDetails().getWebDriver().findElement(_by).getText();
-            	super.getConfiguration().toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
+            	result = TestActionFixture.config.getWebDriverDetails().getWebDriver().findElement(_by).getText();
+            	TestActionFixture.config.toSystemOut("[TEST][SUCCESS] Find element identified by " + _by.toString());
                 break;
             } 
             catch (StaleElementReferenceException _sere) 
-            { super.getConfiguration().toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
+            { TestActionFixture.config.toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
             catch (WebDriverException _wde) 
-            { super.getConfiguration().toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
+            { TestActionFixture.config.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
             attempt++;
         }
         return result;
@@ -113,13 +117,13 @@ public abstract class TestActionFixture extends TestConfigurationFixture
     
     public void domClick(WebElement _element)
     {
-        JavascriptExecutor javascriptExecutor = (JavascriptExecutor)super.getConfiguration().getWebDriverDetails().getWebDriver();
+        JavascriptExecutor javascriptExecutor = (JavascriptExecutor)TestActionFixture.config.getWebDriverDetails().getWebDriver();
         javascriptExecutor.executeScript("arguments[0].click();", _element);
     }
 
     public void hoverClick(WebElement _element)
     {
-        Actions actions = new Actions(super.getConfiguration().getWebDriverDetails().getWebDriver());
+        Actions actions = new Actions(TestActionFixture.config.getWebDriverDetails().getWebDriver());
         actions.moveToElement(_element).click().build().perform();
     }
     
@@ -138,9 +142,9 @@ public abstract class TestActionFixture extends TestConfigurationFixture
 	                break;
 	            } 
 	            catch (StaleElementReferenceException _sere) 
-	            { super.getConfiguration().toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
+	            { TestActionFixture.config.toSystemOut("[TEST][STALE] " + this.findRegex(_sere.getMessage(), this.errorRegex)); }
 	            catch (WebDriverException _wde) 
-	            { super.getConfiguration().toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
+	            { TestActionFixture.config.toSystemOut("[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)); }
 	            attempt++;
 	        }
     	}
@@ -157,11 +161,11 @@ public abstract class TestActionFixture extends TestConfigurationFixture
         try
         {
         	this.waitUntil(ExpectedConditions.titleIs(_title));
-        	super.getConfiguration().toSystemOut("[TEST][SUCCESS] " + _text);
+        	TestActionFixture.config.toSystemOut("[TEST][SUCCESS] " + _text);
         }
         catch (WebDriverException _wde)
         {
-        	super.getConfiguration().toSystemOut("[TEST][FAILURE] " + _text);
+        	TestActionFixture.config.toSystemOut("[TEST][FAILURE] " + _text);
             fail("[TEST][FAILURE] " + _text);
         }
     }
@@ -171,11 +175,11 @@ public abstract class TestActionFixture extends TestConfigurationFixture
     	try
         {
     		this.waitUntil(ExpectedConditions.not(ExpectedConditions.titleIs(_title)));
-    		super.getConfiguration().toSystemOut("[TEST][SUCCESS] " + _text);
+    		TestActionFixture.config.toSystemOut("[TEST][SUCCESS] " + _text);
         }
     	catch (WebDriverException _wde)
     	{
-    		super.getConfiguration().toSystemOut("[TEST][FAILURE] " + _text);
+    		TestActionFixture.config.toSystemOut("[TEST][FAILURE] " + _text);
     		fail("[TEST][FAILURE] " + _text);
     	}
     }
@@ -183,7 +187,8 @@ public abstract class TestActionFixture extends TestConfigurationFixture
     public <V> V waitUntil(Function<? super WebDriver, V> _isTrue)
     { 
     	return new WebDriverWait(
-			super.getConfiguration().getWebDriverDetails().getWebDriver(), super.getConfiguration().getTimeout()
+			TestActionFixture.config.getWebDriverDetails().getWebDriver(), 
+			TestActionFixture.config.getTimeout()
 		).until(_isTrue);
 	}
     
@@ -211,7 +216,7 @@ public abstract class TestActionFixture extends TestConfigurationFixture
 		String lastTextAfterSort = this.retryingFindTextElementByCss(_secondElement);		
 		assertEquals(firstTextBeforeSort, lastTextAfterSort);		
 		assertEquals(lastTextBeforeSort, firstTextAfterSort);
-		super.getConfiguration().toSystemOut(
+		TestActionFixture.config.toSystemOut(
 			"[TEST][SUCCESS] Correct sorting - before: first->" + firstTextBeforeSort.substring(0, 10) +
 				((firstTextBeforeSort.length() > 10) ? "..." : "") + 
 					" last->" + lastTextBeforeSort.substring(0, 10) + 
@@ -262,7 +267,7 @@ public abstract class TestActionFixture extends TestConfigurationFixture
 		String status;
 		if (_isSuccess) status = "success";
 		else status = "failure";
-		super.getConfiguration().toSystemOut("assertion " + status + ": " + _text);
+		TestActionFixture.config.toSystemOut("assertion " + status + ": " + _text);
 	}
 	
 	public void logAssertionFailure(String _text)
@@ -271,5 +276,6 @@ public abstract class TestActionFixture extends TestConfigurationFixture
     public void logAssertionSuccess(String _text)
     { this.logAssertion(_text, true); }
     
+    public static ConfigurationSingleton config = ConfigurationSingleton.getSingletonInstance();
     private final String errorRegex = "(.+?(?=Command duration or timeout))|(.+?(?=Build info))";
 }

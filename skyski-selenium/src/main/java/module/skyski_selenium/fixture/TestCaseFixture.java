@@ -37,7 +37,7 @@ public abstract class TestCaseFixture extends TestActionFixture
         { this.watcherToSystemOut("[FINISH] " + _description); }
         
         private void watcherToSystemOut(String _description)
-        { TestCaseFixture.super.getConfiguration().toSystemOut("[WATCHER]" + _description.toString()); }
+        { TestActionFixture.config.toSystemOut("[WATCHER]" + _description.toString()); }
 	};
 	
 	@After
@@ -50,14 +50,14 @@ public abstract class TestCaseFixture extends TestActionFixture
 		if (!TestCaseFixture.setUpIsDone)
 		{
 			new Thread(new LoginWindow()).start();
-			super.getConfiguration().getWebDriverDetails().getWebDriver().get(
-				super.getConfiguration().getStageDetails().getAppUrl()
+			TestActionFixture.config.getWebDriverDetails().getWebDriver().get(
+				TestActionFixture.config.getStageDetails().getAppUrl()
 			);
-			super.setUpTimeout(super.getConfiguration().getTimeout());
+			super.setUpTimeout(TestActionFixture.config.getTimeout());
 			TestCaseFixture.setUpIsDone = true;
 		}
-		super.getConfiguration().getWebDriverDetails().getWebDriver().get(
-			super.getConfiguration().getStageDetails().getAppUrl()
+		TestActionFixture.config.getWebDriverDetails().getWebDriver().get(
+			TestActionFixture.config.getStageDetails().getAppUrl()
 		);
 		super.titleAssertion("SKYski Project", "Load home page");
 	}
@@ -69,7 +69,7 @@ public abstract class TestCaseFixture extends TestActionFixture
         { 
         	try { login(); }
         	catch (Exception _e) 
-        	{ TestCaseFixture.super.getConfiguration().toSystemOut("[WATCHER] " + _e.getMessage()); }
+        	{ TestActionFixture.config.toSystemOut("[WATCHER] " + _e.getMessage()); }
         }
 
         public void login() throws AWTException, InterruptedException, UnsupportedFlavorException 
@@ -91,8 +91,7 @@ public abstract class TestCaseFixture extends TestActionFixture
             Robot robot = new Robot();
             StringSelection username = 
         		new StringSelection(
-    				TestCaseFixture.super.getConfiguration().getStagesData().get(0).
-    					getBasicCredentialUser()
+    				TestActionFixture.config.getStagesData().get(0).getBasicCredentialUser()
 				);
             clipboard.setContents(username, null);            
             robot.keyPress(KeyEvent.VK_CONTROL);
@@ -104,8 +103,7 @@ public abstract class TestCaseFixture extends TestActionFixture
             Thread.sleep(2000);
             StringSelection passwd = 
         		new StringSelection(
-    				TestCaseFixture.super.getConfiguration().getStagesData().get(0).
-    					getBasicCredentialPassword()
+    				TestActionFixture.config.getStagesData().get(0).getBasicCredentialPassword()
 				);
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(passwd, null);
             robot.keyPress(KeyEvent.VK_CONTROL);
