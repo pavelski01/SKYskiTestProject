@@ -10,7 +10,7 @@ import module.skyski_selenium.suite.AllTests;
 
 public class TestRunner
 {
-	public static void main(String[] args) throws Exception
+	public static void main(String[] _args) throws Exception
 	{
 		Computer computer = new Computer();
 	    JUnitCore jUnitCore = new JUnitCore();

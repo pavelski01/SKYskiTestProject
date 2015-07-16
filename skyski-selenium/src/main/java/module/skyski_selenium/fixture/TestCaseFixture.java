@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.Description;
 
+import module.skyski_selenium.config.ConfigurationSingleton;
 import module.skyski_selenium.config.LoginWindow;
 
 public abstract class TestCaseFixture extends TestActionFixture
@@ -30,7 +31,11 @@ public abstract class TestCaseFixture extends TestActionFixture
         { this.watcherToSystemOut("[FINISH] " + _description); }
         
         private void watcherToSystemOut(String _description)
-        { TestActionFixture.config.toSystemOut("[WATCHER]" + _description.toString()); }
+        { 
+        	ConfigurationSingleton.getSingletonInstance().toSystemOut(
+    			"[WATCHER]" + _description.toString()
+			);
+    	}
 	};
 	
 	@After
@@ -43,14 +48,14 @@ public abstract class TestCaseFixture extends TestActionFixture
 		if (!TestCaseFixture.setUpIsDone)
 		{
 			new Thread(new LoginWindow()).start();
-			TestActionFixture.config.getWebDriverDetails().getWebDriver().get(
-				TestActionFixture.config.getStageDetails().getAppUrl()
+			ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
+				ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
 			);
-			super.setUpTimeout(TestActionFixture.config.getTimeout());
+			super.setUpTimeout(ConfigurationSingleton.getSingletonInstance().getTimeout());
 			TestCaseFixture.setUpIsDone = true;
 		}
-		TestActionFixture.config.getWebDriverDetails().getWebDriver().get(
-			TestActionFixture.config.getStageDetails().getAppUrl()
+		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
+			ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
 		);
 		super.titleAssertion("SKYski Project", "Load home page");
 	}
