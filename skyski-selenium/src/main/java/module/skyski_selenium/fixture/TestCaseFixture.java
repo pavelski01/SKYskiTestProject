@@ -31,7 +31,7 @@ public abstract class TestCaseFixture extends TestActionFixture
         { this.watcherToSystemOut("[FINISH] " + _description); }
         
         private void watcherToSystemOut(String _description)
-        { 
+        {
         	ConfigurationSingleton.getSingletonInstance().toSystemOut(
     			"[WATCHER]" + _description.toString()
 			);
@@ -39,11 +39,11 @@ public abstract class TestCaseFixture extends TestActionFixture
 	};
 	
 	@After
-	public void tearDown()
+	public void tearDownEachTime()
 	{ super.retryingFindClickElementByCss("form > a:first-of-type"); }
 	
 	@Before
-    public void setUpBefore() throws Exception
+    public void setUpBeforeEachTime()
 	{		
 		if (!TestCaseFixture.setUpIsDone)
 		{
@@ -51,7 +51,7 @@ public abstract class TestCaseFixture extends TestActionFixture
 			ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
 				ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
 			);
-			super.setUpTimeout(ConfigurationSingleton.getSingletonInstance().getTimeout());
+			super.setUpTimeout(ConfigurationSingleton.getSingletonInstance().getTimeout());		
 			TestCaseFixture.setUpIsDone = true;
 		}
 		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(

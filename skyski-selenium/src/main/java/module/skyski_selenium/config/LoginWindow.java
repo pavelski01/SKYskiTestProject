@@ -39,7 +39,7 @@ public class LoginWindow implements Runnable
         Robot robot = new Robot();
         StringSelection username = 
     		new StringSelection(
-				ConfigurationSingleton.getSingletonInstance().getStagesData().get(0).getBasicCredentialUser()
+				ConfigurationSingleton.getSingletonInstance().getStageDetails().getBasicCredentialUser()
 			);
         clipboard.setContents(username, null);            
         robot.keyPress(KeyEvent.VK_CONTROL);
@@ -51,7 +51,7 @@ public class LoginWindow implements Runnable
         Thread.sleep(2000);
         StringSelection passwd = 
     		new StringSelection(
-				ConfigurationSingleton.getSingletonInstance().getStagesData().get(0).getBasicCredentialPassword()
+				ConfigurationSingleton.getSingletonInstance().getStageDetails().getBasicCredentialPassword()
 			);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(passwd, null);
         robot.keyPress(KeyEvent.VK_CONTROL);
