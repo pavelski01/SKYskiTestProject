@@ -7,7 +7,7 @@ import org.junit.runners.MethodSorters;
 import module.skyski_selenium.fixture.TestCaseFixture;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LoginPage extends TestCaseFixture
+public final class LoginPage extends TestCaseFixture
 {
 	@Test
     public void loginPageShouldLoadAndUnload_ValidUrl_Success() 

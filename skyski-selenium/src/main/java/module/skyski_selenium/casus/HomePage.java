@@ -7,7 +7,7 @@ import org.junit.runners.MethodSorters;
 import module.skyski_selenium.fixture.TestCaseFixture;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class HomePage extends TestCaseFixture
+public final class HomePage extends TestCaseFixture
 {
 	@Test
     public void homePageShouldLoad_ValidUrl_Success() 

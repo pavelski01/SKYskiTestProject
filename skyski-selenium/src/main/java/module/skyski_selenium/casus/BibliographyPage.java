@@ -7,7 +7,7 @@ import org.junit.runners.MethodSorters;
 import module.skyski_selenium.fixture.TestCaseFixture;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class BibliographyPage extends TestCaseFixture
+public final class BibliographyPage extends TestCaseFixture
 {
 	@Test
     public void bibliographyPageShouldLoadAndU_ValidUrl_Success() 

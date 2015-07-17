@@ -24,9 +24,7 @@ import com.google.common.base.Function;
 import module.skyski_selenium.config.ConfigurationSingleton;
 
 public abstract class TestActionFixture
-{
-	public TestActionFixture() { super(); }
-	
+{	
 	public void setUpTimeout(int _seconds)
 	{
 		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().
@@ -87,7 +85,7 @@ public abstract class TestActionFixture
             catch (WebDriverException _wde)
             { 
             	ConfigurationSingleton.getSingletonInstance().toSystemOut(
-        			"[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)
+        			"[TEST][MALFUNCTION] " + this.findRegex(_wde.getMessage(), this.errorRegex)
     			);
         	}
             attempt++;
@@ -120,7 +118,7 @@ public abstract class TestActionFixture
             catch (WebDriverException _wde) 
             { 
             	ConfigurationSingleton.getSingletonInstance().toSystemOut(
-        			"[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)
+        			"[TEST][MALFUNCTION] " + this.findRegex(_wde.getMessage(), this.errorRegex)
     			);
         	}
             attempt++;
@@ -180,7 +178,7 @@ public abstract class TestActionFixture
 	            catch (WebDriverException _wde) 
 	            { 
 	            	ConfigurationSingleton.getSingletonInstance().toSystemOut(
-            			"[TEST][WEBDRIVER] " + this.findRegex(_wde.getMessage(), this.errorRegex)
+            			"[TEST][MALFUNCTION] " + this.findRegex(_wde.getMessage(), this.errorRegex)
         			);
             	}
 	            attempt++;

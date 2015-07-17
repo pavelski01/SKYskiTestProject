@@ -62,6 +62,18 @@ public final class ConfigurationSingleton
 				"[DEBUG]" + ((_text.startsWith("[") ? "" : " ") + _text)
 			);
 	}
+    
+    public void webDriverQuit()
+    {
+    	this.getWebDriverDetails().getWebDriver().quit();
+    	this.toSystemOut(
+			"[WEBDRIVER][QUIT] " +
+				this.getWebDriverDetails().getBrowser().substring(0, 1).toUpperCase() +
+					this.getWebDriverDetails().getBrowser().substring(
+						1, this.getWebDriverDetails().getBrowser().length()
+					) + " quit"
+		);
+	}
 
     private void analyzeStage(String _stage, Properties _properties)
     {
@@ -114,7 +126,7 @@ public final class ConfigurationSingleton
                     webDriverTransport = new WebDriverDTO();
                     webDriverTransport.setBrowser("firefox");
                     webDriverTransport.setWebDriver(this.getFirefoxWebDriverInstance());
-                    webDrivers.add(webDriverTransport);                 
+                    webDrivers.add(webDriverTransport);                
                     break;
             }
         }
