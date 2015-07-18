@@ -88,6 +88,12 @@ public abstract class TestActionFixture
         			"[TEST][MALFUNCTION] " + this.findRegex(_wde.getMessage(), this.errorRegex)
     			);
         	}
+            catch (Exception _e)
+            {
+            	ConfigurationSingleton.getSingletonInstance().toSystemOut(
+        			"[TEST][FAULT] " + this.findRegex(_e.getMessage(), this.errorRegex)
+    			);
+            }
             attempt++;
         }
         return result;
@@ -121,6 +127,12 @@ public abstract class TestActionFixture
         			"[TEST][MALFUNCTION] " + this.findRegex(_wde.getMessage(), this.errorRegex)
     			);
         	}
+            catch (Exception _e)
+            {
+            	ConfigurationSingleton.getSingletonInstance().toSystemOut(
+        			"[TEST][FAULT] " + this.findRegex(_e.getMessage(), this.errorRegex)
+    			);
+            }
             attempt++;
         }
         return result;
@@ -181,6 +193,12 @@ public abstract class TestActionFixture
             			"[TEST][MALFUNCTION] " + this.findRegex(_wde.getMessage(), this.errorRegex)
         			);
             	}
+	            catch (Exception _e)
+	            {
+	            	ConfigurationSingleton.getSingletonInstance().toSystemOut(
+	        			"[TEST][FAULT] " + this.findRegex(_e.getMessage(), this.errorRegex)
+	    			);
+	            }
 	            attempt++;
 	        }
     	}

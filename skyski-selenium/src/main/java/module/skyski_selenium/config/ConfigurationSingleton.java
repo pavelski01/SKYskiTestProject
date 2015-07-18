@@ -36,8 +36,6 @@ public final class ConfigurationSingleton
         String stage = properties.getProperty(STAGE_KEY);
         if (stage == null) stage = ConfigurationSingleton.EMPTY;
         else this.analyzeStage(stage, properties);
-        if (this.getWebDrivers().get(0).getWebDriver() != null)
-			this.webDriverDetails = this.getWebDrivers().get(0);
 		if (this.getStagesData().get(0).getStage() != null)
 			this.stageDetails = this.getStagesData().get(0);
     }
@@ -62,6 +60,30 @@ public final class ConfigurationSingleton
 				"[DEBUG]" + ((_text.startsWith("[") ? "" : " ") + _text)
 			);
 	}
+    
+    public void webDriverCreate(String _webDriverString)
+    {
+    	String currentWebDriver = null;
+    	if (_webDriverString.equals("chrome"))
+    	{
+    		this.webDriverDetails = new WebDriverDTO();
+    		this.webDriverDetails.setBrowser(currentWebDriver = "chrome");
+    		this.webDriverDetails.setWebDriver(this.getChromeWebDriverInstance());
+    	}
+    	else if (_webDriverString.equals("firefox"))
+    	{
+    		this.webDriverDetails = new WebDriverDTO();
+    		this.webDriverDetails.setBrowser(currentWebDriver = "firefox");
+    		this.webDriverDetails.setWebDriver(this.getFirefoxWebDriverInstance());
+    	}
+    	this.toSystemOut(
+			"[WEBDRIVER][CREATE] " +
+				currentWebDriver.substring(0, 1).toUpperCase() +
+					currentWebDriver.substring(
+						1, currentWebDriver.length()
+					) + " create"
+		);
+    }
     
     public void webDriverQuit()
     {
@@ -109,24 +131,17 @@ public final class ConfigurationSingleton
         final char C_CASE = 'c', F_CASE = 'f';
         StringTokenizer browserStringTokenizer = new StringTokenizer(_browser, DELIMITER);
         String token;        
-        ArrayList<WebDriverDTO> webDrivers = new ArrayList<WebDriverDTO>();
-        WebDriverDTO webDriverTransport;
+        ArrayList<String> webDrivers = new ArrayList<String>();
         while (browserStringTokenizer.hasMoreTokens())
         {
             token = browserStringTokenizer.nextToken().toLowerCase();
             switch (token.charAt(0))
             {
-                case C_CASE:                    
-                    webDriverTransport = new WebDriverDTO();
-                    webDriverTransport.setBrowser("chrome");
-                    webDriverTransport.setWebDriver(this.getChromeWebDriverInstance());
-                    webDrivers.add(webDriverTransport);                
+                case C_CASE:
+                    webDrivers.add(new String("chrome"));                
                     break;
-                case F_CASE:                    
-                    webDriverTransport = new WebDriverDTO();
-                    webDriverTransport.setBrowser("firefox");
-                    webDriverTransport.setWebDriver(this.getFirefoxWebDriverInstance());
-                    webDrivers.add(webDriverTransport);                
+                case F_CASE:
+                    webDrivers.add(new String("firefox"));                
                     break;
             }
         }
@@ -287,12 +302,11 @@ public final class ConfigurationSingleton
     public int getTimeout() { return this.timeout; }   
     public StageDataDTO getStageDetails() { return this.stageDetails; }
     public WebDriverDTO getWebDriverDetails() { return this.webDriverDetails; }
+    public ArrayList<String> getWebDrivers() { return this.webDrivers; }
     public ArrayList<StageDataDTO> getStagesData() { return this.stagesData; }
-    public ArrayList<WebDriverDTO> getWebDrivers() { return this.webDrivers; }
     
     /* SETTERS */
     public void setStageDetails(StageDataDTO _stage) { this.stageDetails = _stage; }
-    public void setWebDriverDetails(WebDriverDTO _webDriver) { this.webDriverDetails = _webDriver; }
 
     /* VARIABLES */
     private boolean debug;
@@ -302,6 +316,6 @@ public final class ConfigurationSingleton
     private static ConfigurationSingleton singletonInstance;
     private StageDataDTO stageDetails;
     private WebDriverDTO webDriverDetails;    
-    private ArrayList<WebDriverDTO> webDrivers;
+    private ArrayList<String> webDrivers;
     private ArrayList<StageDataDTO> stagesData;
 }
