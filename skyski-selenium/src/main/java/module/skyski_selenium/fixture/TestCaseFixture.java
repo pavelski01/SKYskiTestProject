@@ -7,7 +7,6 @@ import org.junit.rules.TestName;
 import org.junit.runner.Description;
 
 import module.skyski_selenium.config.ConfigurationSingleton;
-import module.skyski_selenium.config.LoginWindow;
 
 public abstract class TestCaseFixture extends TestActionFixture
 {
@@ -44,21 +43,10 @@ public abstract class TestCaseFixture extends TestActionFixture
 	
 	@Before
     public void setUpBeforeEachTime()
-	{		
-		if (!TestCaseFixture.setUpIsDone)
-		{
-			new Thread(new LoginWindow()).start();
-			ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
-				ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
-			);
-			super.setUpTimeout(ConfigurationSingleton.getSingletonInstance().getTimeout());		
-			TestCaseFixture.setUpIsDone = true;
-		}
+	{
 		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
 			ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
 		);
 		super.titleAssertion("SKYski Project", "Load home page");
 	}
-	
-	private static boolean setUpIsDone = false;
 }

@@ -61,6 +61,14 @@ public final class ConfigurationSingleton
 			);
 	}
     
+    public void automaticBasicAccessAuthentication()
+    {
+    	new Thread(new LoginWindow()).start();
+		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
+			ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
+		);
+    }
+    
     public void webDriverCreate(String _webDriverString)
     {
     	String currentWebDriver = null;
