@@ -32,7 +32,10 @@ public abstract class TestCaseFixture extends TestActionFixture
         private void watcherToSystemOut(String _description)
         {
         	ConfigurationSingleton.getSingletonInstance().toSystemOut(
-    			"[WATCHER]" + _description.toString()
+    			"[WATCHER]" + 
+					_description.substring(0, _description.indexOf('(') + 1) +
+					_description.substring(_description.lastIndexOf('.') + 1, _description.indexOf(')')) +
+				_description.substring(_description.indexOf(')'), _description.length())
 			);
     	}
 	};
