@@ -10,6 +10,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import module.skyski_selenium.dto.StageDataDTO;
 import module.skyski_selenium.dto.WebDriverDTO;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -158,14 +159,37 @@ public final class ConfigurationSingleton
 
     private WebDriver getChromeWebDriverInstance()
     {
-    	final String path = "/src/main/java/module/skyski_selenium/config/chromedriver";
-    	if (path != null && !path.equals(""))
+    	final String
+    	FILE_SEPARATOR = System.getProperty("file.separator"),
+        DRIVER_NAME = "chromedriver",
+        LOG_NAME = "chromedriver.log",
+		DRIVER_PATH = 
+        	ConfigurationSingleton.class.getProtectionDomain().
+    			getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
+    				"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + 
+    					"config";
+    	final String 
+    		pathToChrome = DRIVER_PATH + FILE_SEPARATOR + DRIVER_NAME,
+			pathToChromeLog = DRIVER_PATH + FILE_SEPARATOR + LOG_NAME;
+    	if (pathToChrome != null && !pathToChrome.equals(""))
     	{
-	    	System.setProperty("webdriver.chrome.driver", path);
-	    	System.setProperty("webdriver.chrome.bin", path);
+	    	System.setProperty("webdriver.chrome.driver", pathToChrome);
+	    	//System.setProperty("webdriver.chrome.bin", pathToChrome);
+	    	System.setProperty("webdriver.chrome.logfile", pathToChromeLog);
     	}
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("start-maximized, no-sandbox");
+        chromeOptions.setBinary(new File(pathToChrome));
+        chromeOptions.addArguments(
+    		new String[] 
+			{
+				"disable-extensions",
+				"ignore-certificate-errors",
+				"no-sandbox",
+				"privileged",
+				"safebrowsing-disable-extension-blacklist",
+				"start-maximized"
+			}
+		);
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
         desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         ChromeDriver chromeDriver = new ChromeDriver(desiredCapabilities);
@@ -223,13 +247,13 @@ public final class ConfigurationSingleton
                     temporaryValue = _properties.getProperty(temporaryKey);
                     temporaryKey = state.toLowerCase() + record;
                     if (temporaryValue == null) temporaryValue = ConfigurationSingleton.EMPTY;
-                    this.setupReflectionData(temporaryKey, temporaryValue, stageDataTransport);
+                    this.setUpReflectionData(temporaryKey, temporaryValue, stageDataTransport);
                 }
         }
     	this.stagesData.add(stageDataTransport);
     }
 
-    private void setupReflectionData(String _temporaryKey, String _temporaryValue, Object _ob)
+    private void setUpReflectionData(String _temporaryKey, String _temporaryValue, Object _ob)
     {
     	Class<? extends Object> cl = _ob.getClass();
     	Field field = null;
