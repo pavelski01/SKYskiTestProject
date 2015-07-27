@@ -161,20 +161,19 @@ public final class ConfigurationSingleton
     	final String
 	    	FILE_SEPARATOR = System.getProperty("file.separator"),
 	        DRIVER_NAME = "chromedriver",
-	        LOG_NAME = "chromedriver.log",
 			DRIVER_PATH = 
 	        	ConfigurationSingleton.class.getProtectionDomain().
 	    			getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
 	    				"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + 
-	    					"config";
-    	final String 
-    		pathToChromeBin = DRIVER_PATH + FILE_SEPARATOR + DRIVER_NAME,
-			pathToChromeLog = DRIVER_PATH + FILE_SEPARATOR + LOG_NAME;
-    	//if (pathToChrome != null && !pathToChrome.equals(""))
-    	//{
-	    	System.setProperty("webdriver.chrome.driver", pathToChromeBin);
-	    	System.setProperty("webdriver.chrome.logfile", pathToChromeLog);
-    	//}
+	    					"config",
+			PATH_TO_CHROME_BIN = DRIVER_PATH + FILE_SEPARATOR + DRIVER_NAME;    	
+    	String chromeBinary = System.getProperty(" ");
+		if (chromeBinary == null || chromeBinary.equals(""))
+		{
+		    String os = System.getProperty("os.name").toLowerCase().substring(0, 3);
+		    chromeBinary = PATH_TO_CHROME_BIN + (os.equals("win") ? ".exe" : "");
+		    System.setProperty("webdriver.chrome.driver", chromeBinary);
+		}
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
     		new String[] 
