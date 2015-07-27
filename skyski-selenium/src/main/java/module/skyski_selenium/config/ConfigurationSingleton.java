@@ -262,23 +262,43 @@ public final class ConfigurationSingleton
 		}
 		catch (IllegalAccessException _iae)
 		{
-			final String ILLEGAL_ACCESS = "Illegal access:";
-            System.out.println(ILLEGAL_ACCESS + ConfigurationSingleton.GAP + _iae.toString());
+			final String ILLEGAL_ACCESS = "Illegal access:";			
+			this.toSystemOut(
+    			"[CONFIGURATION][FAULT] " + 
+					ILLEGAL_ACCESS + 
+						ConfigurationSingleton.GAP + 
+					_iae.toString()
+			);
 		}
 		catch (IllegalArgumentException _iae)
 		{
 			final String ILLEGAL_ARGUMENT = "Illegal argument:";
-            System.out.println(ILLEGAL_ARGUMENT + ConfigurationSingleton.GAP + _iae.toString());
+            this.toSystemOut(
+    			"[CONFIGURATION][FAULT] " + 
+					ILLEGAL_ARGUMENT + 
+						ConfigurationSingleton.GAP + 
+					_iae.toString()
+			);
 		} 
 		catch (NoSuchFieldException _nsfe) 
 		{ 
 			final String NO_FIELD = "No field:";
-            System.out.println(NO_FIELD + ConfigurationSingleton.GAP + _nsfe.toString());
+            this.toSystemOut(
+    			"[CONFIGURATION][FAULT] " + 
+					NO_FIELD + 
+						ConfigurationSingleton.GAP + 
+					_nsfe.toString()
+			);
 		} 
 		catch (SecurityException _se) 
 		{ 
-			final String SECURITY = "Securuty:";
-            System.out.println(SECURITY + ConfigurationSingleton.GAP + _se.toString());
+			final String SECURITY = "Security:";            
+            this.toSystemOut(
+    			"[CONFIGURATION][FAULT] " + 
+					SECURITY + 
+						ConfigurationSingleton.GAP + 
+					_se.toString()
+			);
 		}
     }
 
