@@ -10,7 +10,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import module.skyski_selenium.dto.StageDataDTO;
 import module.skyski_selenium.dto.WebDriverDTO;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,32 +159,29 @@ public final class ConfigurationSingleton
     private WebDriver getChromeWebDriverInstance()
     {
     	final String
-    	FILE_SEPARATOR = System.getProperty("file.separator"),
-        DRIVER_NAME = "chromedriver",
-        LOG_NAME = "chromedriver.log",
-		DRIVER_PATH = 
-        	ConfigurationSingleton.class.getProtectionDomain().
-    			getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
-    				"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + 
-    					"config";
+	    	FILE_SEPARATOR = System.getProperty("file.separator"),
+	        DRIVER_NAME = "chromedriver",
+	        LOG_NAME = "chromedriver.log",
+			DRIVER_PATH = 
+	        	ConfigurationSingleton.class.getProtectionDomain().
+	    			getCodeSource().getLocation().getPath() + FILE_SEPARATOR + 
+	    				"module" + FILE_SEPARATOR + "skyski_selenium" + FILE_SEPARATOR + 
+	    					"config";
     	final String 
-    		pathToChrome = DRIVER_PATH + FILE_SEPARATOR + DRIVER_NAME,
+    		pathToChromeBin = DRIVER_PATH + FILE_SEPARATOR + DRIVER_NAME,
 			pathToChromeLog = DRIVER_PATH + FILE_SEPARATOR + LOG_NAME;
-    	if (pathToChrome != null && !pathToChrome.equals(""))
-    	{
-	    	System.setProperty("webdriver.chrome.driver", pathToChrome);
-	    	//System.setProperty("webdriver.chrome.bin", pathToChrome);
+    	//if (pathToChrome != null && !pathToChrome.equals(""))
+    	//{
+	    	System.setProperty("webdriver.chrome.driver", pathToChromeBin);
 	    	System.setProperty("webdriver.chrome.logfile", pathToChromeLog);
-    	}
+    	//}
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary(new File(pathToChrome));
         chromeOptions.addArguments(
     		new String[] 
 			{
 				"disable-extensions",
 				"ignore-certificate-errors",
 				"no-sandbox",
-				"privileged",
 				"safebrowsing-disable-extension-blacklist",
 				"start-maximized"
 			}
