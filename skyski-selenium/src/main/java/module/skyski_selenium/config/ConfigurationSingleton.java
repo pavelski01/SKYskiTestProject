@@ -104,6 +104,23 @@ public final class ConfigurationSingleton
 					) + " quit"
 		);
 	}
+    
+    public void setUpTimeout(int _seconds)
+	{
+		this.getWebDriverDetails().getWebDriver().
+			manage().timeouts().implicitlyWait(
+				_seconds, TimeUnit.SECONDS
+			);
+    }
+
+    public void resetTimeout()
+    {
+    	this.getWebDriverDetails().getWebDriver().
+    		manage().timeouts().implicitlyWait(
+				ConfigurationSingleton.getSingletonInstance().getTimeout(), 
+				TimeUnit.SECONDS
+			);
+    }
 
     private void analyzeStage(String _stage, Properties _properties)
     {
@@ -181,7 +198,6 @@ public final class ConfigurationSingleton
 				"disable-extensions",
 				"ignore-certificate-errors",
 				"no-sandbox",
-				"safebrowsing-disable-extension-blacklist",
 				"start-maximized"
 			}
 		);

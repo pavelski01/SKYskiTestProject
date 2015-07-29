@@ -3,7 +3,6 @@ package module.skyski_selenium.fixture;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
 
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,23 +23,7 @@ import com.google.common.base.Function;
 import module.skyski_selenium.config.ConfigurationSingleton;
 
 public abstract class TestActionFixture
-{	
-	public void setUpTimeout(int _seconds)
-	{
-		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().
-			manage().timeouts().implicitlyWait(
-				_seconds, TimeUnit.SECONDS
-			);
-    }
-
-    public void resetTimeout()
-    {
-    	ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().
-    		manage().timeouts().implicitlyWait(
-				ConfigurationSingleton.getSingletonInstance().getTimeout(), TimeUnit.SECONDS
-			);
-    }
-    
+{    
     public WebElement findElementBy(By _by)
     {
     	return ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().
@@ -68,7 +51,7 @@ public abstract class TestActionFixture
         while (attempt < 5)
         {
             try 
-            { 
+            {
             	ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().
             		getWebDriver().findElement(_by).click();
                 result = true;
@@ -157,28 +140,30 @@ public abstract class TestActionFixture
     			getWebDriverDetails().getWebDriver();
         javascriptExecutor.executeScript("arguments[0].click();", _element);
     }
-
-    public void hoverClick(WebElement _element)
-    {
-        Actions actions = 
-    		new Actions(
-				ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver()
-			);
-        actions.moveToElement(_element).click().build().perform();
-    }
     
-    public void htmlChordKeySequence(int _counter, CharSequence... _charSequences)
+    public void htmlChordKeySequence(String _message, int _counter, CharSequence... _charSequences)
     {
-    	WebElement html = null;
+    	WebElement firstDivision = null;
+    	Actions anActions = null; 
     	for (int i = 0; i < _counter; i++)
     	{
 	        int attempt = 0;
 	        while (attempt < 5)
 	        {
 	            try 
-	            { 
-	            	html = this.waitUntil(ExpectedConditions.presenceOfElementLocated(By.tagName("html")));
-	            	html.sendKeys(Keys.chord(_charSequences));
+	            {
+	            	anActions = new Actions(
+            			ConfigurationSingleton.getSingletonInstance().
+            				getWebDriverDetails().getWebDriver()
+        			);
+	            	firstDivision = 
+            			this.waitUntil(
+        					ExpectedConditions.presenceOfElementLocated(By.tagName("div"))
+    					);
+	            	anActions.moveToElement(firstDivision, 10, 10);
+	            	anActions.click();
+	            	anActions.sendKeys(Keys.chord(_charSequences));
+	            	anActions.build().perform();
 	                break;
 	            } 
 	            catch (StaleElementReferenceException _sere) 
@@ -202,13 +187,16 @@ public abstract class TestActionFixture
 	            attempt++;
 	        }
     	}
+    	ConfigurationSingleton.getSingletonInstance().toSystemOut(
+			"[TEST][SUCCESS] " + _message
+		);
 	}
     
     public void adjustScreen()
-    { this.htmlChordKeySequence(4, Keys.CONTROL, Keys.SUBTRACT); }
+    { this.htmlChordKeySequence("Adjust screen", 4, Keys.CONTROL, Keys.SUBTRACT); }
     
     public void resetScreen()
-    { this.htmlChordKeySequence(1, Keys.CONTROL, "0"); }
+    { this.htmlChordKeySequence("Reset screen", 1, Keys.CONTROL, "0"); }
     
     public void titleAssertion(String _title, String _text)
     {
