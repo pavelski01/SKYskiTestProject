@@ -144,7 +144,6 @@ public abstract class TestActionFixture
     public void htmlChordKeySequence(String _message, int _counter, CharSequence... _charSequences)
     {
     	WebElement firstDivision = null;
-    	Actions anActions = null; 
     	for (int i = 0; i < _counter; i++)
     	{
 	        int attempt = 0;
@@ -152,18 +151,14 @@ public abstract class TestActionFixture
 	        {
 	            try 
 	            {
-	            	anActions = new Actions(
-            			ConfigurationSingleton.getSingletonInstance().
-            				getWebDriverDetails().getWebDriver()
-        			);
 	            	firstDivision = 
             			this.waitUntil(
         					ExpectedConditions.presenceOfElementLocated(By.tagName("div"))
     					);
-	            	anActions.moveToElement(firstDivision, 10, 10);
-	            	anActions.click();
-	            	anActions.sendKeys(Keys.chord(_charSequences));
-	            	anActions.build().perform();
+	            	TestActionFixture.actions.moveToElement(firstDivision);
+	            	TestActionFixture.actions.click();
+	            	TestActionFixture.actions.sendKeys(Keys.chord(_charSequences));
+	            	TestActionFixture.executeActions();
 	                break;
 	            } 
 	            catch (StaleElementReferenceException _sere) 
@@ -320,5 +315,18 @@ public abstract class TestActionFixture
     public void logAssertionSuccess(String _text)
     { this.logAssertion(_text, true); }
     
+    private static void executeActions()
+    {
+    	TestActionFixture.actions.build().perform();
+    	TestActionFixture.actions = new Actions(
+			ConfigurationSingleton.getSingletonInstance().
+				getWebDriverDetails().getWebDriver()
+		);
+    }
+    
+    private static Actions actions = new Actions(
+		ConfigurationSingleton.getSingletonInstance().
+			getWebDriverDetails().getWebDriver()
+	);
     private final String errorRegex = "(.+?(?=Command duration or timeout))|(.+?(?=Build info))";
 }
