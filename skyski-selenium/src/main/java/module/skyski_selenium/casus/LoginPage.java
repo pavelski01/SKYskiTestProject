@@ -23,7 +23,7 @@ public final class LoginPage extends TestCaseFixture
     }
 	
 	@Test
-    public void LoginPageShouldChangeLanguage_PolishRussianEnglish_Success() 
+    public void loginPageShouldChangeLanguage_PolishRussianEnglish_Success() 
     {		
 		super.resetScreen();
 		super.adjustScreen();

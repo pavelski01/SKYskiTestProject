@@ -13,11 +13,11 @@ public final class HomePage extends TestCaseFixture
     public void homePageShouldLoad_ValidUrl_Success() 
 	{
 		super.resetScreen();
-		super.adjustScreen();		
+		super.adjustScreen();
 	}
 	
 	@Test
-    public void HomePageShouldChangeLanguage_PolishRussianEnglish_Success() 
+    public void homePageShouldChangeLanguage_PolishRussianEnglish_Success() 
 	{
 		super.resetScreen();
 		super.adjustScreen();

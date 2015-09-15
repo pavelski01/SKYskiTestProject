@@ -17,7 +17,7 @@ public class LoginWindow implements Runnable
     { 
     	try { login(); }
     	catch (Exception _e) 
-    	{ ConfigurationSingleton.getSingletonInstance().toSystemOut("[WATCHER] " + _e.getMessage()); }
+    	{ ConfigurationSingleton.INSTANCE.toSystemOut("[WATCHER] " + _e.getMessage()); }
     }
 
     public void login() throws AWTException, InterruptedException, UnsupportedFlavorException 
@@ -39,7 +39,7 @@ public class LoginWindow implements Runnable
         Robot robot = new Robot();
         StringSelection username = 
     		new StringSelection(
-				ConfigurationSingleton.getSingletonInstance().getStageDetails().getBasicCredentialUser()
+				ConfigurationSingleton.INSTANCE.getStageDetails().getBasicCredentialUser()
 			);
         clipboard.setContents(username, null);            
         robot.keyPress(KeyEvent.VK_CONTROL);
@@ -51,7 +51,7 @@ public class LoginWindow implements Runnable
         Thread.sleep(2000);
         StringSelection passwd = 
     		new StringSelection(
-				ConfigurationSingleton.getSingletonInstance().getStageDetails().getBasicCredentialPassword()
+				ConfigurationSingleton.INSTANCE.getStageDetails().getBasicCredentialPassword()
 			);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(passwd, null);
         robot.keyPress(KeyEvent.VK_CONTROL);

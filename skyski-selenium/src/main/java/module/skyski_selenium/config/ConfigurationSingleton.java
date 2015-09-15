@@ -21,11 +21,17 @@ import java.util.concurrent.TimeUnit;
 
 public final class ConfigurationSingleton
 {
-    /* CONSTRUCTOR */
+	/* STATIC BLOCK */
+    static
+    {
+    	ConfigurationSingleton.INSTANCE = ConfigurationSingleton.getSingletonInstance();
+    }
+	
+	/* CONSTRUCTOR */
     public ConfigurationSingleton()
     {
         final String
-            BROWSER_KEY = "browser", DEBUG_KEY = "debug",
+        	BROWSER_KEY = "browser", DEBUG_KEY = "debug",
             STAGE_KEY = "stage", TIMEOUT_KEY = "timeout";
         Properties properties = this.getProperties();
         String browser = properties.getProperty(BROWSER_KEY);
@@ -40,7 +46,7 @@ public final class ConfigurationSingleton
 			this.stageDetails = this.getStagesData().get(0);
     }
 
-    public static ConfigurationSingleton getSingletonInstance()
+    private static ConfigurationSingleton getSingletonInstance()
     {
         if (ConfigurationSingleton.singletonInstance == null) 
         	ConfigurationSingleton.singletonInstance = new ConfigurationSingleton();
@@ -193,7 +199,7 @@ public final class ConfigurationSingleton
 		}
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments(
-    		new String[] 
+    		new String[]
 			{
 				"disable-extensions",
 				"ignore-certificate-errors",
@@ -372,6 +378,7 @@ public final class ConfigurationSingleton
     public void setStageDetails(StageDataDTO _stage) { this.stageDetails = _stage; }
 
     /* VARIABLES */
+    public static ConfigurationSingleton INSTANCE;
     private boolean debug;
     private int timeout;
     private static final String 

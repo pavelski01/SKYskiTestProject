@@ -31,7 +31,7 @@ public abstract class TestCaseFixture extends TestActionFixture
         
         private void watcherToSystemOut(String _description)
         {
-        	ConfigurationSingleton.getSingletonInstance().toSystemOut(
+        	ConfigurationSingleton.INSTANCE.toSystemOut(
     			"[WATCHER]" + 
 					_description.substring(0, _description.indexOf('(') + 1) +
 					_description.substring(_description.lastIndexOf('.') + 1, _description.indexOf(')')) +
@@ -47,8 +47,8 @@ public abstract class TestCaseFixture extends TestActionFixture
 	@Before
     public void setUpBeforeEachTime()
 	{
-		ConfigurationSingleton.getSingletonInstance().getWebDriverDetails().getWebDriver().get(
-			ConfigurationSingleton.getSingletonInstance().getStageDetails().getAppUrl()
+		ConfigurationSingleton.INSTANCE.getWebDriverDetails().getWebDriver().get(
+			ConfigurationSingleton.INSTANCE.getStageDetails().getAppUrl()
 		);
 		super.titleAssertion("SKYski Project", "Load home page");
 	}

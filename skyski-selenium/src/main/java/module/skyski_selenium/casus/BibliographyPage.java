@@ -44,7 +44,7 @@ public final class BibliographyPage extends TestCaseFixture
     }
 	
 	@Test
-    public void BibliographyPageShouldSortByAuthors_AuthorsEnglishPolishRussian_Success() 
+    public void bibliographyPageShouldSortByAuthors_AuthorsEnglishPolishRussian_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
@@ -80,7 +80,7 @@ public final class BibliographyPage extends TestCaseFixture
     }
 	
 	@Test
-    public void BibliographyPageShouldSortByTitles_TitlesEnglishPolishRussian_Success() 
+    public void bibliographyPageShouldSortByTitles_TitlesEnglishPolishRussian_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
@@ -116,7 +116,7 @@ public final class BibliographyPage extends TestCaseFixture
     }
 	
 	@Test
-    public void BibliographyPageShouldSortByPlaceAndYearOfPublication_PlaceAndYearOfPublicationEnglishPolishRussian_Success() 
+    public void bibliographyPageShouldSortByPlaceAndYearOfPublication_PlaceAndYearOfPublicationEnglishPolishRussian_Success() 
     {
 		super.resetScreen();
 		super.adjustScreen();
