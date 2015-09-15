@@ -42,7 +42,7 @@ public abstract class TestCaseFixture extends TestActionFixture
 	
 	@After
 	public void tearDownEachTime()
-	{ super.retryingFindClickElementByCss("form > a:first-of-type"); }
+	{ super.findAndClickElementByCss("form > a:first-of-type"); }
 	
 	@Before
     public void setUpBeforeEachTime()

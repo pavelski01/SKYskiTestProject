@@ -130,15 +130,30 @@ public abstract class TestActionFixture
     public boolean retryingFindClickElementByXpath(String _xpathSelector)
     { return this.retryingFindClickElementBy(By.xpath(_xpathSelector)); }
     
-    public boolean retryingFindClickElementByCss(String _cssSelector)
-    { return this.retryingFindClickElementBy(By.cssSelector(_cssSelector)); }
+    public boolean findAndClickElementByCss(String _cssSelector)
+    { 
+    	//return this.retryingFindClickElementBy(By.cssSelector(_cssSelector));
+    	return this.domClick(this.findElementByCss(_cssSelector), By.cssSelector(_cssSelector));
+	}
     
-    public void domClick(WebElement _element)
+    public boolean domClick(WebElement _element, By _by)
     {
         JavascriptExecutor javascriptExecutor = 
     		(JavascriptExecutor)ConfigurationSingleton.INSTANCE.
     			getWebDriverDetails().getWebDriver();
         javascriptExecutor.executeScript("arguments[0].click();", _element);
+        ConfigurationSingleton.INSTANCE.toSystemOut(
+			"[TEST][SUCCESS] Find element identified by " + _by.toString()
+		);
+        return true;
+    }
+    
+    public void domZoom(int _scale)
+    {
+    	JavascriptExecutor javascriptExecutor = 
+			(JavascriptExecutor)ConfigurationSingleton.INSTANCE.
+    			getWebDriverDetails().getWebDriver();
+    	javascriptExecutor.executeScript("document.body.style.zoom='" + _scale + "%'");
     }
     
     public void htmlChordKeySequence(String _message, int _counter, CharSequence... _charSequences)
@@ -188,10 +203,16 @@ public abstract class TestActionFixture
 	}
     
     public void adjustScreen()
-    { this.htmlChordKeySequence("Adjust screen", 4, Keys.CONTROL, Keys.SUBTRACT); }
+    { 
+    	//this.htmlChordKeySequence("Adjust screen", 4, Keys.CONTROL, Keys.SUBTRACT);
+    	this.domZoom(60);
+	}
     
     public void resetScreen()
-    { this.htmlChordKeySequence("Reset screen", 1, Keys.CONTROL, "0"); }
+    { 
+    	//this.htmlChordKeySequence("Reset screen", 1, Keys.CONTROL, "0");
+    	this.domZoom(0);
+	}
     
     public void titleAssertion(String _title, String _text)
     {
@@ -238,14 +259,14 @@ public abstract class TestActionFixture
 		if (!_isPreSorted)
 		{
 			firstTextBeforeSort = this.retryingFindTextElementByCss(_firstElement);
-			this.retryingFindClickElementByCss(_sortButton);
+			this.findAndClickElementByCss(_sortButton);
 			this.waitUntil(ExpectedConditions.invisibilityOfElementWithText(
 				By.cssSelector(_firstElement), firstTextBeforeSort)
 			);
 		}
 		firstTextBeforeSort = this.retryingFindTextElementByCss(_firstElement);
 		lastTextBeforeSort = this.retryingFindTextElementByCss(_secondElement);
-		this.retryingFindClickElementByCss(_sortButton);
+		this.findAndClickElementByCss(_sortButton);
 		this.waitUntil(ExpectedConditions.invisibilityOfElementWithText(
 			By.cssSelector(_firstElement), firstTextBeforeSort
 		));

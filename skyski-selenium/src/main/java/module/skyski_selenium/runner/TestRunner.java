@@ -18,7 +18,7 @@ public class TestRunner
 	    Field aField = JUnitCore.class.getDeclaredField("notifier");
 	    aField.setAccessible(true);
 	    RunNotifier aRunNotifier = (RunNotifier)aField.get(aJunitCore);
-	    ConfigurationSingleton.INSTANCE.webDriverCreate("firefox");
+	    ConfigurationSingleton.INSTANCE.webDriverCreate("chrome");
 	    ConfigurationSingleton.INSTANCE.automaticBasicAccessAuthentication();
 	    aJunitCore.run(aComputer, AllTests.class);
 	    ConfigurationSingleton.INSTANCE.webDriverQuit();
