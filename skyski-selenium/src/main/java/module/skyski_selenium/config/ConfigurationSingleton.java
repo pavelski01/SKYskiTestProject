@@ -24,11 +24,12 @@ public final class ConfigurationSingleton
 	/* STATIC BLOCK */
     static
     {
-    	ConfigurationSingleton.INSTANCE = ConfigurationSingleton.getSingletonInstance();
+    	ConfigurationSingleton.INSTANCE = 
+			ConfigurationSingleton.getSingletonInstance();
     }
 	
 	/* CONSTRUCTOR */
-    public ConfigurationSingleton()
+    private ConfigurationSingleton()
     {
         final String
         	BROWSER_KEY = "browser", DEBUG_KEY = "debug",

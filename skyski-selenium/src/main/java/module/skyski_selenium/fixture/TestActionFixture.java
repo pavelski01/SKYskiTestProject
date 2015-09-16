@@ -133,15 +133,16 @@ public abstract class TestActionFixture
     public boolean findAndClickElementByCss(String _cssSelector)
     { 
     	//return this.retryingFindClickElementBy(By.cssSelector(_cssSelector));
-    	return this.domClick(this.findElementByCss(_cssSelector), By.cssSelector(_cssSelector));
+    	return this.domClick(By.cssSelector(_cssSelector));
 	}
     
-    public boolean domClick(WebElement _element, By _by)
+    public boolean domClick(By _by)
     {
+    	WebElement element = this.findElementBy(_by);
         JavascriptExecutor javascriptExecutor = 
     		(JavascriptExecutor)ConfigurationSingleton.INSTANCE.
     			getWebDriverDetails().getWebDriver();
-        javascriptExecutor.executeScript("arguments[0].click();", _element);
+        javascriptExecutor.executeScript("arguments[0].click();", element);
         ConfigurationSingleton.INSTANCE.toSystemOut(
 			"[TEST][SUCCESS] Find element identified by " + _by.toString()
 		);
@@ -261,8 +262,8 @@ public abstract class TestActionFixture
 			firstTextBeforeSort = this.retryingFindTextElementByCss(_firstElement);
 			this.findAndClickElementByCss(_sortButton);
 			this.waitUntil(ExpectedConditions.invisibilityOfElementWithText(
-				By.cssSelector(_firstElement), firstTextBeforeSort)
-			);
+				By.cssSelector(_firstElement), firstTextBeforeSort
+			));
 		}
 		firstTextBeforeSort = this.retryingFindTextElementByCss(_firstElement);
 		lastTextBeforeSort = this.retryingFindTextElementByCss(_secondElement);
