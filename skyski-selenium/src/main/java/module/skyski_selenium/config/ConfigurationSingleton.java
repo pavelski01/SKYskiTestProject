@@ -1,5 +1,14 @@
 package module.skyski_selenium.config;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Properties;
+import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -9,15 +18,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 
 import module.skyski_selenium.dto.StageDataDTO;
 import module.skyski_selenium.dto.WebDriverDTO;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Properties;
-import java.util.StringTokenizer;
-import java.util.concurrent.TimeUnit;
 
 public final class ConfigurationSingleton
 {
@@ -195,7 +195,7 @@ public final class ConfigurationSingleton
 		if (chromeBinary == null || chromeBinary.equals(""))
 		{
 		    String os = System.getProperty("os.name").toLowerCase().substring(0, 3);
-		    chromeBinary = PATH_TO_CHROME_BIN + (os.equals("win") ? ".exe" : "");
+		    chromeBinary = PATH_TO_CHROME_BIN + (os.contains("win") ? ".exe" : "");
 		    System.setProperty("webdriver.chrome.driver", chromeBinary);
 		}
         ChromeOptions chromeOptions = new ChromeOptions();
@@ -207,7 +207,7 @@ public final class ConfigurationSingleton
 				"no-sandbox",
 				"start-maximized"
 			}
-		);
+		);       
         DesiredCapabilities desiredCapabilities = DesiredCapabilities.chrome();
         desiredCapabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
         ChromeDriver chromeDriver = new ChromeDriver(desiredCapabilities);

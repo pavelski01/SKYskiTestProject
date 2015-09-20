@@ -144,7 +144,7 @@ public abstract class TestActionFixture
     			getWebDriverDetails().getWebDriver();
         javascriptExecutor.executeScript("arguments[0].click();", element);
         ConfigurationSingleton.INSTANCE.toSystemOut(
-			"[TEST][SUCCESS] Find element identified by " + _by.toString()
+			"[TEST][SUCCESS] Click element identified by " + _by.toString()
 		);
         return true;
     }
@@ -204,16 +204,10 @@ public abstract class TestActionFixture
 	}
     
     public void adjustScreen()
-    { 
-    	//this.htmlChordKeySequence("Adjust screen", 4, Keys.CONTROL, Keys.SUBTRACT);
-    	this.domZoom(60);
-	}
+    { this.htmlChordKeySequence("Adjust screen", 4, Keys.CONTROL, Keys.SUBTRACT); }
     
     public void resetScreen()
-    { 
-    	//this.htmlChordKeySequence("Reset screen", 1, Keys.CONTROL, "0");
-    	this.domZoom(0);
-	}
+    { this.htmlChordKeySequence("Reset screen", 1, Keys.CONTROL, "0"); }
     
     public void titleAssertion(String _title, String _text)
     {
