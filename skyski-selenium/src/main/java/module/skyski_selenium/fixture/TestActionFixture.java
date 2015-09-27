@@ -131,10 +131,7 @@ public abstract class TestActionFixture
     { return this.retryingFindClickElementBy(By.xpath(_xpathSelector)); }
     
     public boolean findAndClickElementByCss(String _cssSelector)
-    { 
-    	//return this.retryingFindClickElementBy(By.cssSelector(_cssSelector));
-    	return this.domClick(By.cssSelector(_cssSelector));
-	}
+    { return this.retryingFindClickElementBy(By.cssSelector(_cssSelector)); }
     
     public boolean domClick(By _by)
     {
