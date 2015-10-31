@@ -20,14 +20,7 @@ import module.skyski_selenium.dto.StageDataDTO;
 import module.skyski_selenium.dto.WebDriverDTO;
 
 public final class ConfigurationSingleton
-{
-	/* STATIC BLOCK */
-    static
-    {
-    	ConfigurationSingleton.INSTANCE = 
-			ConfigurationSingleton.getSingletonInstance();
-    }
-	
+{	
 	/* CONSTRUCTOR */
     private ConfigurationSingleton()
     {
@@ -47,12 +40,8 @@ public final class ConfigurationSingleton
 			this.stageDetails = this.getStagesData().get(0);
     }
 
-    private static ConfigurationSingleton getSingletonInstance()
-    {
-        if (ConfigurationSingleton.singletonInstance == null) 
-        	ConfigurationSingleton.singletonInstance = new ConfigurationSingleton();
-        return ConfigurationSingleton.singletonInstance;
-    }
+    public static ConfigurationSingleton getSingletonInstance()
+    { return ConfigurationSingleton.singletonInstance; }
     
     public static String getStatusToString(boolean _status)
     {
@@ -379,12 +368,12 @@ public final class ConfigurationSingleton
     public void setStageDetails(StageDataDTO _stage) { this.stageDetails = _stage; }
 
     /* VARIABLES */
-    public static ConfigurationSingleton INSTANCE;
+    private final static ConfigurationSingleton singletonInstance = 
+		new ConfigurationSingleton();
     private boolean debug;
     private int timeout;
     private static final String 
         EMPTY = "", FAILURE = "failure", GAP = " ", SUCCESS = "success";
-    private static ConfigurationSingleton singletonInstance;
     private StageDataDTO stageDetails;
     private WebDriverDTO webDriverDetails;    
     private ArrayList<String> webDrivers;
